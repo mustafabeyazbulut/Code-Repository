@@ -1,0 +1,214 @@
+public IActionResult ReceiptPrint(string ticketNo, string viewNames)
+{
+    var printerName = SettingRepo.ReceiptPrinter;
+    var item = RepoItem.GetByTicketNo(ticketNo);
+
+    CarrierQueuePrintViewModel model = new CarrierQueuePrintViewModel();
+    model.TicketNo = item.TicketNo;
+    var company = _repoCompany.GetItemShow(2, 35).Result;
+    //model.CompanyName = company.Name != null ? company.Name : "";
+    //model.CompanyAddress1 = company.DeliveryAddress1 != null ? company.DeliveryAddress1 : "";
+    model.CompanyAddress2 = (company.DeliveryPostalCode != null ? company.DeliveryPostalCode : " ") + " " + (company.DeliveryCityName != null ? company.DeliveryCityName : " ");
+    model.CompanyName = @XmlCarrierLangHtmlExtender.L("receipt_Company");
+    model.CompanyAddress1 = @XmlCarrierLangHtmlExtender.L("receipt_CompanyAdress1");
+    model.CompanyAddress2 = @XmlCarrierLangHtmlExtender.L("receipt_CompanyAdress2");
+
+    model.Vehicle = item.Track1 != null ? item.Track1 : "";
+    if (viewNames == "ReceiptQueuePreview")
+    {
+        model.Date = item.Volume1Date.ToString("dd/MM/yyyy HH:mm:ss");
+        model.QueueNo = item.Que.ToString();
+    }
+    else if (viewNames == "ReceiptCompletePreview")
+    {
+        model.Date = item.Day + "/" + item.Month + "/" + item.Year;
+        model.HawlageCompanyName = item.HawlageCompanyName != null ? item.HawlageCompanyName : "";
+
+        model.Volume1 = item.Volume1.ToString("N0") + " kg ";
+        model.Volume2 = item.Volume2.ToString("N0") + " kg ";
+        model.Volume1Date = item.Volume1Date.ToString("HH:mm:ss");
+        model.Volume2Date = item.Volume2Date.ToString("HH:mm:ss");
+
+        if (item.Volume1 > item.Volume2)
+        {
+            model.Net = (item.Volume1 - item.Volume2).ToString("N0") + " kg ";
+        }
+        else
+        {
+            model.Net = (item.Volume2 - item.Volume1).ToString("N0") + " kg ";
+        }
+    }
+    if (item == null)
+        return NotFound();
+
+    int targetLength= 20;
+    if (viewNames == "ReceiptQueuePreview")
+    {
+        targetLength = 15;
+    }
+    else if (viewNames == "ReceiptCompletePreview")
+    {
+        targetLength= 15;
+    }
+
+    string ESC = "0x1B"; //ESC byte in hex notation
+    string GS = "0x1D"; //GS byte in hex notation
+    string zeroEsc= ESC+ "0x00";
+    string NewLine = "0x0A"; //LF byte in hex notation
+    string cutter = NewLine + NewLine + NewLine + NewLine + NewLine + ESC + "0x69"; // cut that paper!
+
+    string centerAlign = ESC + "0x61" + "0x01"; // center alignment
+    string leftAlign = ESC + "0x61" + "0x00"; // left alignment
+
+    string fontAs = ESC + "!" + "0x00"; // 12x24 (normal)
+    string fontBs= ESC + "!" + "0x01"; // 9x17 (small)
+
+    string fontA = ESC + "0x4D" + "0x00"; 
+    string fontB = ESC + "0x4D" + "0x48"; 
+
+    string fontBold= ESC + "!" + "0x00";
+
+    string fontHeader1= ESC + "0x21" + "0x30"; 
+    string fontHeader2 = ESC + "0x21" + "0x40"; 
+    string fontHeader3 = ESC + "0x21" + "0x40"; 
+    string fontTicket= ESC + "0x21" + "0x40";
+    string fontQueue = GS + "0x21" + "0x77";
+    string fontContent= ESC + "0x21" + "0x40"; 
+
+
+    string fontGenislik1=GS + "0x21" + "0x00";
+    string fontGenislik2 = GS + "0x21" + "0x10";
+    string fontGenislik3 = GS + "0x21" + "0x20";
+    string fontGenislik4 = GS + "0x21" + "0x30";
+    string fontGenislik5 = GS + "0x21" + "0x40";
+    string fontGenislik6 = GS + "0x21" + "0x50";
+    string fontGenislik7 = GS + "0x21" + "0x60";
+    string fontGenislik8 = GS + "0x21" + "0x70";
+
+    string fontYukseklik1 = GS + "0x21" + "0x00";
+    string fontYukseklik2 = GS + "0x21" + "0x01";
+    string fontYukseklik3 = GS + "0x21" + "0x02";
+    string fontYukseklik4 = GS + "0x21" + "0x03";
+    string fontYukseklik5 = GS + "0x21" + "0x04";
+    string fontYukseklik6 = GS + "0x21" + "0x05";
+    string fontYukseklik7 = GS + "0x21" + "0x06";
+    string fontYukseklik8 = GS + "0x21" + "0x07";
+
+
+    string cmds = "";
+
+    cmds += zeroEsc+fontB + fontHeader1+ centerAlign;
+    cmds += model.CompanyName;
+    cmds += NewLine;
+
+
+    cmds += zeroEsc + fontB + fontHeader2 + centerAlign;
+    cmds += model.CompanyAddress1;
+    cmds += NewLine;
+
+
+    cmds += zeroEsc + fontB + fontHeader3 + centerAlign;
+    cmds += model.CompanyAddress2;
+    cmds += NewLine + NewLine+ NewLine;
+
+    cmds += zeroEsc + fontB + fontTicket+ fontYukseklik2 + leftAlign;
+    cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_TicketNo"),targetLength);
+    cmds += " : ";
+    cmds += model.TicketNo;
+    cmds += NewLine;
+
+    cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+    cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Date"), targetLength);
+    cmds += " : ";
+    cmds += model.Date;
+    cmds += NewLine;
+
+    cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+    cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Vehicle"), targetLength);
+    cmds += " : ";
+    cmds += model.Vehicle;
+    cmds += NewLine;
+
+    if (viewNames == "ReceiptQueuePreview")
+    {
+        cmds += zeroEsc + fontQueue + centerAlign;
+        cmds += model.QueueNo;
+        cmds += NewLine;
+
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += @XmlCarrierLangHtmlExtender.L("receipt_Information");
+        cmds += NewLine;
+
+
+        var langCode = XmlCarrierLangHtmlExtender.GetLanguageCode();
+        var warningHtml = _repoHtml.GetBody(langCode);
+        var doc = new HtmlDocument();
+        doc.LoadHtml(warningHtml);
+        warningHtml = doc.DocumentNode.InnerText;
+        warningHtml = HttpUtility.HtmlDecode(warningHtml);
+
+        cmds += NewLine+ NewLine;
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += warningHtml;
+        cmds += NewLine;
+
+    }
+    else if (viewNames == "ReceiptCompletePreview")
+    {
+        cmds += NewLine;
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Hauler"), targetLength);
+        cmds += " : ";
+        cmds += model.HawlageCompanyName;
+        cmds += NewLine;
+
+        ///////////// max lenght
+        int maxVolumeLenght = Math.Max(model.Volume1.Length, Math.Max(model.Volume2.Length, model.Net.Length));
+
+        cmds += NewLine;
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Volume1"), targetLength);
+        cmds += " : ";
+        cmds += FillWithSpacesAtBeginning(model.Volume1,maxVolumeLenght);
+        cmds += model.Volume1Date;
+        cmds += NewLine;
+
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Volume2"), targetLength);
+        cmds += " : ";
+        cmds += FillWithSpacesAtBeginning(model.Volume2, maxVolumeLenght);
+        cmds += model.Volume2Date;
+        cmds += NewLine;
+
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += "............................................";
+        cmds += NewLine;
+
+        cmds += zeroEsc + fontB + fontContent + fontYukseklik1 + leftAlign;
+        cmds += FillWithSpaces(@XmlCarrierLangHtmlExtender.L("receipt_Net"), targetLength);
+        cmds += " : ";
+        cmds += FillWithSpacesAtBeginning(model.Net, maxVolumeLenght);
+        cmds += NewLine;
+
+
+    }
+
+
+
+        cmds += cutter; //cut that paper!
+
+    ClientPrintJob cpj = new ClientPrintJob();
+    //set  ESCPOS commands to print...
+    cpj.PrinterCommands = cmds;
+    cpj.FormatHexValues = true;
+
+
+    //set client printer...
+    if (printerName == "null")
+        cpj.ClientPrinter = new DefaultPrinter();
+    else
+        cpj.ClientPrinter = new InstalledPrinter(printerName);
+
+
+    return File(cpj.GetContent(), "application/octet-stream");
+}

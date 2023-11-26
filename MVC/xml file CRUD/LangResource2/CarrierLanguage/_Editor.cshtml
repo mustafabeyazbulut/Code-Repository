@@ -1,0 +1,59 @@
+﻿@model CarrierLanguage
+
+    <div class="portlet">
+        <div class="portlet__body">
+            <div class="row">
+                <div class="col-12 col-lg-12">
+                    <div class="form-group row mb-2">
+                        @Html.LabelFor(d => d.languageName, new { @class = "control-label col-4" })
+                        <div class="col-8">
+                            <div class="input-group">
+                                @Html.TextBoxFor(d => d.languageName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        @Html.LabelFor(d => d.languageCode, new { @class = "control-label col-4" })
+                        <div class="col-8">
+                            <div class="input-group">
+                                @Html.TextBoxFor(d => d.languageCode, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        @Html.LabelFor(d => d.FlagImage, new { @class = "control-label col-4" })
+                        <div class="col-4 ">
+                            <div class="input-group">
+                                @Html.TextBoxFor(d => d.FlagImageFile, new { @class = "required", @type="file", @accept=".jpg, .jpeg, .png",@onchange="previewImage(this)"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <div class="control-label col-4"></div>
+                        <div class="col-8">
+                            <img id="flagImagePreview" src="~/Store/Carrier/CarrierLanguage/@Model.FlagImage" alt="@Model.FlagImage" class="CarrierLanguageFlagImage">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.LabelFor(d => d.IsDefault, new { @class = "control-label col-4" })
+                        <div class="col-1">
+                            @Html.CheckBoxFor(d => d.IsDefault, new { @class = "form-control-sm" })
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#flagImagePreview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

@@ -1,0 +1,130 @@
+﻿
+
+<style>
+
+    .step-icon {
+        font-family: 'Font Awesome 5 Free'; /* Font Awesome kullanıyorsanız, doğru font adını belirtin */
+        font-size: 24px; /* İcon boyutu */
+        margin-right: 10px; /* İcon ile metin arasındaki boşluk */
+    }
+
+    ul.stepper.horizontal .step .step-content .step-actions {
+    }
+
+</style>
+@{
+
+}
+
+<ul class="stepper horizontal bg-light">
+    <li class="step active">
+        <div class="step-title waves-effect">
+            @* <i class="step-icon fa fa-check-circle"></i> <!-- Font Awesome ikonunu kullanarak --> *@
+            @XmlCarrierLangHtmlExtender.L("Step1")
+        </div>
+        <div class="step-content">
+            <!-- Your step content goes here (like inputs or so) -->
+            <div id="divLanguageList" class="table-container">
+            </div>
+            <div class="step-actions">
+                <!-- Here goes your actions buttons -->
+
+            </div>
+        </div>
+    </li>
+    <li class="step">
+        <div class="step-title waves-effect">
+            @* <i class="step-icon fa fa-check-circle"></i> <!-- Font Awesome ikonunu kullanarak --> *@
+            @XmlCarrierLangHtmlExtender.L("Step2")
+        </div>
+        <div class="step-content">
+            <!-- Your step content goes here (like inputs or so) -->
+            <div id="divActivitesList" class="table-container">
+            </div>
+            <div class="step-actions">
+                <!-- Here goes your actions buttons -->
+            </div>
+        </div>
+    </li>
+
+    <li class="step">
+        <div class="step-title waves-effect">
+            @* <i class="step-icon fa fa-check-circle"></i> <!-- Font Awesome ikonunu kullanarak --> *@
+            @XmlCarrierLangHtmlExtender.L("Step3")
+        </div>
+        @using (Html.BeginForm("CarrierInformationSave", "InformationForm", FormMethod.Post, new { @id = "frmCarrier", @class = "form-horizontal" }))
+        {
+            <div class="step-content">
+                <!-- Your step content goes here (like inputs or so) -->
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div id="divOperationList" class="table-container">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 col-md-8 row justify-content-center">
+
+                        <!-- Here goes your actions buttons -->
+                        <div class="col-6 col-lg-4 col-md-6 col-s-12 mb-2">
+                            <button type="button" id="btnCarrierSaveEnd" class="waves-effect waves-dark btn btn-default custom-btn" style="width:100%">Save & End</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </li>
+
+</ul>
+
+
+
+
+
+<script type="text/javascript">
+    var action0 = true;
+    var action1 = false;
+    var action2 = true;
+    LoadUrlToDiv('@Url.Action("LanguageList", "InformationForm")', 'divLanguageList');
+
+
+    var stepper = document.querySelector('.stepper');
+    var stepperInstace = new MStepper(stepper, {
+        // options
+        firstActive: 0, //secili gelmesi icin 0 yapildi
+        validationFunction: validationFunction, // default stepper validation function
+        stepTitleNavigation: true,
+        showFeedbackPreloader: true,
+        linearStepsNavigation: true,
+        feedbackPreloader: '<div class="spinner-layer spinner-blue-only">...</div>'
+    })
+    function validationFunction(stepperForm, activeStepContent) {
+        var currentSteps = stepperInstace.getSteps().active;
+
+        switch (currentSteps.index) {
+            case 0:
+                $("#divOperationList").html("");
+                LoadUrlToDiv('@Url.Action("ActivityList", "InformationForm")', 'divActivitesList');
+                return action0;
+            case 1:
+                return action1;
+            case 2:
+                return action2;
+            default:
+                return true;
+        }
+
+        return true;
+    }
+
+                // function SaveAndContinue(destroyFeedback, form, activeStepContent) {
+                //     console.log(form);
+                //     data - feedback="SaveAndContinue"
+                //     // Do your stuff here
+                //     // Call destroyFeedback() function when you're done
+                //     // The true parameter will proceed to the next step besides destroying the preloader
+                //     destroyFeedback(true);
+                // }
+
+</script>
+
+

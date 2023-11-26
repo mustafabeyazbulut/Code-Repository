@@ -1,0 +1,40 @@
+@model List<LanguageResource>
+<div class="portlet">
+    <div class="portlet__body">
+        <div class="form-group row mb-3">
+            <label class="col-2 col-form-label col-form-label-sm font-weight-bold text-large">Global</label>
+        </div>
+        <div class="form-group row mb-3">
+            @Html.LabelFor(model => model[0].Name, new { @class = "col-2 col-form-label col-form-label-sm" })
+            <div class="col-10">
+                @Html.TextBoxFor(model => model[0].Name, new { @class = "form-control form-control-sm required"})
+            </div>
+        </div>
+    </div>
+</div>
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    <div class="portlet">
+        <div class="portlet__body">
+            @Html.HiddenFor(model => model[i].lastName)
+            <div class="form-group row mb-3">
+                @Html.LabelFor(model => model[i].LangName, Model[i].LangName, new { @class = "col-2 col-form-label col-form-label-sm font-weight-bold text-large" })
+            </div>
+            <div class="form-group row mb-3">
+                @Html.LabelFor(model => model[i].Value, new { @class = "col-2 col-form-label col-form-label-sm" })
+                <div class="col-10">
+                    @Html.TextBoxFor(model => model[i].Value, new { @class = "form-control form-control-sm"})
+                </div>
+            </div>
+
+            <div class="form-group row mb-3">
+                @Html.LabelFor(model => model[i].LangCode, new { @class = "col-2 col-form-label col-form-label-sm" })
+                <div class="col-10">
+                    @Html.TextBoxFor(model => model[i].LangCode, new { @class = "form-control form-control-sm disabled"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+}

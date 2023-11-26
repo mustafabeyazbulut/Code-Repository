@@ -1,0 +1,89 @@
+@model decimal
+@{
+    var desc = ViewData.ModelMetadata.Description;
+    var editorCol = 10;
+    var labelCol = 2;
+    var noGroup = false;
+    var decimalPoint = 2;
+    var suffix = "";
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["noGroup"] != null)
+    {
+        var noGroupD = ViewData["noGroup"].ToString();
+        bool.TryParse(noGroupD, out noGroup);
+    }
+    if (ViewData["decimalPoint"] != null)
+    {
+        var decimalPointD = ViewData["decimalPoint"].ToString();
+        int.TryParse(decimalPointD, out decimalPoint);
+    }
+    var dcss = decimalPoint == 2 ? "decimal2" : "decimal4";
+    if (ViewData["suffix"] != null)
+    {
+        suffix = ViewData["suffix"].ToString();
+    }
+    var cssClass = "";
+    if (ViewData["cssClass"] != null)
+    {
+        cssClass = ViewData["cssClass"].ToString();
+    }
+}
+@if (noGroup)
+{
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        @if (suffix.IsEmpty())
+        {
+            @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm " + dcss + " " + cssClass })
+        }
+        else
+        {
+            <div class="input-group input-group-sm">
+                @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm " + dcss + " " + cssClass })
+                <div class="input-group-append">
+                    <span class="input-group-text" id="@Html.IdFor(model=>model)-suffix">@Html.Raw(suffix)</span>
+                </div>
+            </div>
+        }
+        @if (!desc.IsEmpty())
+        {
+            <span>@desc</span>
+        }
+        <span asp-validation-for="@Model"></span>
+    </div>
+}
+else
+{
+    <div class="form-group row" brn-field="@Model">
+        <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+        <div class="col-@editorCol">
+            @if (suffix.IsEmpty())
+            {
+                @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm " + dcss + " " + cssClass })
+            }
+            else
+            {
+                <div class="input-group input-group-sm">
+                    @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm " + dcss + " " + cssClass })
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="@Html.IdFor(model=>model)-suffix">@Html.Raw(suffix)</span>
+                    </div>
+                </div>
+            }
+            @if (!desc.IsEmpty())
+            {
+                <span>@desc</span>
+            }
+            <span asp-validation-for="@Model"></span>
+        </div>
+    </div>
+}

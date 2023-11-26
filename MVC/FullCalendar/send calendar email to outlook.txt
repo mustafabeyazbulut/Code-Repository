@@ -1,0 +1,91 @@
+ public void Calendar(int id)
+ {
+     var item = _repoToplanti.GetItemShow(id);
+     var e = new CalendarEvent
+     {
+         Start = new CalDateTime(item.ToplantiTarihi),
+         End = new CalDateTime(item.ToplantiBitis),
+         Summary = item.Baslik,
+         Priority = 3,
+         Status = "CONFIRMED",
+         Organizer = new Organizer
+         {
+             CommonName = item.AppUser.FirstName + " " + item.AppUser.LastName,
+             SentBy = new Uri("mailto:" + item.AppUser.Email),
+             Value = new Uri("mailto:" + item.AppUser.Email)
+         },
+         Description = item.Konu,
+         Transparency = TransparencyType.Transparent,
+         Sequence = 0,
+         Uid = item.Id.ToString(),
+         Location = item.Konum,
+         Created = new CalDateTime(item.ToplantiTarihi),
+         LastModified = new CalDateTime(item.ToplantiBitis),
+
+         Class = "PUBLIC",
+         Categories = new List<string> { "Toplanti" },
+
+
+
+     };
+     e.Attendees = new List<Attendee>();
+     foreach (var kime in item.ToplantiKullanicilar)
+     {
+         var attendee = new Attendee
+         {
+             CommonName = kime.AppUser.FirstName + " " + kime.AppUser.LastName,
+             Rsvp = false,
+             Value = new Uri("mailto:" + kime.AppUser.Email)
+         };
+         e.Attendees.Add(attendee);
+     }
+     var calendar = new Calendar();
+     calendar.Events.Add(e);
+
+     calendar.Version = "2.0";
+     calendar.ProductId = "-//Ulak//Toplantı//TR";
+     calendar.Method = "REQUEST";
+
+
+     var memory = new MemoryStream();
+     var serializer = new CalendarSerializer();
+     serializer.Serialize(calendar, memory, Encoding.UTF8);
+
+     memory.Position = 0;
+
+     var smtpClient = new SmtpClient("mail.veri.plus")
+     {
+         Port = 587,
+         Credentials = new NetworkCredential("mustafa.beyazbulut@veri.plus", "carkam-hitzi3-noThys"),
+         EnableSsl = true,
+     };
+
+     var mailMessage = new MailMessage
+     {
+         From = new MailAddress("mustafa.beyazbulut@veri.plus"),
+         Subject = "Toplantı Daveti",
+         Body = "Toplantı davetiniz ekteki iCalendar dosyasıyla birlikte.",
+         IsBodyHtml = true,
+     };
+
+     // iCalendar dosyasını eklemek için AlternateView kullanın
+     // iCalendar dosyasını eklemek için AlternateView kullanın
+     ContentType contenttpye= new ContentType("text/calendar");
+     contenttpye.CharSet = "utf-8";
+     contenttpye.Parameters.Add("name", "calendar.ics");
+     contenttpye.Parameters.Add("method", "REQUEST");
+     var calendarView = AlternateView.CreateAlternateViewFromString(Encoding.UTF8.GetString(memory.ToArray()), contenttpye);
+     
+     mailMessage.AlternateViews.Add(calendarView);
+     mailMessage.Attachments.Add(new System.Net.Mail.Attachment(memory, "calendar.ics", "text/calendar"));
+     // iCalendar dosyasını da e-postaya ekleyin
+
+
+     mailMessage.To.Add(new MailAddress("mustafa.beyazbulut@veri.plus"));
+
+     smtpClient.Send(mailMessage);
+
+
+
+
+ }

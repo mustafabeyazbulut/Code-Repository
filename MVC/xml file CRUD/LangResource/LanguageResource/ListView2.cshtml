@@ -1,0 +1,24 @@
+@model IEnumerable<dynamic>
+@{
+    var colList = new List<DataColumn> {
+         new DataColumn{FieldName = "Name", Caption =  XmlLangHtmlExtender.L("LanguageResource_Name"), },
+        new DataColumn{FieldName = "Value", Caption =  XmlLangHtmlExtender.L("LanguageResource_Value"), },
+        new DataColumn{FieldName = "LangCode", Caption =  XmlLangHtmlExtender.L("LanguageResource_Code"), },
+    };
+}
+@Html.DataGrid4(Model, colList.ToArray(), new DataGridOptions4
+{
+    KeyField = "Name",
+    TextField = "Name",
+    GridDiv= "list2Area",
+    ButtonShowEnabled = false,
+    ButtonEditEnabled = true,
+    ButtonColumnWidth = 95,
+    ButtonEditAction= "LanguageResourceEdit?LangCode=" + ViewBag.ParentId,
+    EditPopup=false,
+    PagerAndShortAction = "ListView2",
+    SortDefaultDirection="DESC",
+})
+<script>
+ 
+</script>

@@ -1,0 +1,32 @@
+﻿@model List<KullanicilarViewModel>
+
+
+<div class="toplanti-sag-alt" id="Kullanicilar">
+<div class="kullanicilarList-container" id='CalendarUserDiv'>
+    @foreach (var item in Model)
+    {
+        <div class="draggable-User" id="draggable-@item.Id" data-item-id="@item.Id" draggable="true" style="background-color:@(item.color)">
+            <div class="col-md-2">
+                @item.Id
+            </div>
+            <div class="col-md-2">
+                @item.FirstName
+            </div>
+            <div class="col-md-2">
+                @item.LastName
+            </div>
+        </div>
+    }
+</div>
+</div>
+
+<script>
+
+    $("#btnUserAra").on("click", function () {
+        LoadCalendarSearchUser("CalendarUserList?arama=" + $("#KullaniciAra_Arama").val(), 'Kullanicilar', 'draggable-User');
+    });
+    
+</script>
+
+
+

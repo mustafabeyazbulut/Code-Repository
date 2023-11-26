@@ -1,0 +1,29 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+@section PageToolBar
+{
+    @Html.PageMenu2((EditorPageMenu)ViewBag.PageMenu, "navbar-nav ml-auto navbar-toolbar")
+}
+@section MobilePageToolBar
+{
+    @Html.PageMenu2Mobile((EditorPageMenu)ViewBag.PageMenu)
+}
+@if (ViewBag.EditSaved != null && (bool)ViewBag.EditSaved)
+{
+    <div id="divEditSaved" class="alert alert-info">
+        Başarıyla kaydedildi.
+    </div>
+    <script>
+        $(function () {
+            EditSaved_HideNotice();
+        });
+    </script>
+}
+@using (Html.BeginForm((string)ViewBag.CreateAction, ViewContext.RouteData.Values["controller"].ToString(),
+ FormMethod.Post, new { id = "frmEditor", @class = "form-horizontal", @enctype = "multipart/form-data"  }))
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+    <input type="hidden" id="keepEdit" name="keepEdit" value="0" />
+    <partial name="_Editor" />
+}

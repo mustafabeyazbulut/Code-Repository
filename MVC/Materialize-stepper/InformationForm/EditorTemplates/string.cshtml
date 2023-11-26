@@ -1,0 +1,52 @@
+@{
+    var type = Nullable.GetUnderlyingType(ViewData.ModelMetadata.ModelType) ?? ViewData.ModelMetadata.ModelType;
+    var desc = ViewData.ModelMetadata.Description;
+    var editorCol = 10;
+    var labelCol = 2;
+    var noGroup = false;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["noGroup"] != null)
+    {
+        var noGroupD = ViewData["noGroup"].ToString();
+        bool.TryParse(noGroupD, out noGroup);
+    }
+}
+@if (noGroup)
+{
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        @(typeof(Enum).IsAssignableFrom(type)
+            ? Html.DropDownList("", Html.GetEnumSelectList(type), null, new { @class = "form-control input-sm" })
+            : Html.TextBoxFor(x => x, new { @class = "form-control form-control-sm" }))
+        @if (!desc.IsEmpty())
+        {
+            <span>@desc</span>
+        }
+        @Html.ValidationMessageFor(model => model)
+    </div>
+}
+else
+{
+    <div class="form-group row" brn-field="@Model">
+        <label class="col-@labelCol control-label h5" brn-field="@Model"></label>
+        <div class="col-@editorCol">
+            @(typeof(Enum).IsAssignableFrom(type)
+                ? Html.DropDownList("", Html.GetEnumSelectList(type), null, new { @class = "form-control form-control-sm" })
+                : Html.TextBoxFor(x => x, new { @class = "form-control form-control-sm" }))
+            @if (!desc.IsEmpty())
+            {
+                <span>@desc</span>
+            }
+            @Html.ValidationMessageFor(model => model)
+        </div>
+    </div>
+}

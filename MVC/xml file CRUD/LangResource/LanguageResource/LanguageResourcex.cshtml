@@ -1,0 +1,14 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<div class="portlet">
+    <div class="portlet__body" id="list2Area">
+    </div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+            LoadUrlToDiv('@Url.Action("ListView2", "LanguageResource", new { subId ="" })', 'list2Area');
+        });
+</script>
+

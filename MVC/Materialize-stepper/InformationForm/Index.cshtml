@@ -1,0 +1,32 @@
+@{
+    Layout = "_LayoutCarrier";
+}
+@section PageToolBar
+    {
+    @Html.PageMenu2((EditorPageMenu)ViewBag.PageMenu, "navbar-nav ml-auto navbar-toolbar")
+}
+
+@if (ViewBag.PopupEditor != null && (bool)ViewBag.PopupEditor)
+{
+    Layout = null;
+}
+
+<div id="divList">
+</div>
+
+@if (ViewBag.ParentId == null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            LoadUrlToDivFirst('@Url.Action("ListView")', 'divList');
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            LoadUrlToDivFirst('@Url.Action("ListView",new { subId = ViewBag.ParentId })', 'divList');
+        });
+    </script>
+}

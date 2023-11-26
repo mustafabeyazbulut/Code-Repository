@@ -1,0 +1,82 @@
+.disabled {
+    pointer-events: none;
+    background-color: #e9ecef;
+}
+
+.kullanicilarList-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+    margin-top: 2%;
+    max-height: 70vh;
+}
+
+.toplanti-sag-alt {
+    width: 100%;
+    height: 72vh;
+    overflow-y: auto;
+}
+
+.kullanicilarList-query {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.draggable-User {
+    margin-bottom: 10px;
+    min-height: 30px;
+    display: flex; /* Öğeleri blok olarak değil de satır olarak hizalar */
+    flex-direction: row; /* Öğeleri yatay olarak hizalar */
+    justify-content: space-evenly; /* Öğeleri yatay olarak hizalar */
+    align-items: center;
+    cursor: grab; /* Sürükleme işlemi sırasında el işareti görüntülenir */
+    opacity: 0.8; /* Öğeyi yarı saydam yapar */
+    border: 2px solid #007bff; /* Kenarlık ekler */
+    border-radius: 4px; /* Kenarları yuvarlar */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Hafif gölge ekler */
+    padding-right: 10%;
+    transition: opacity 0.2s, transform 0.2s; /* Geçiş efektleri ekler */
+}
+
+    .draggable-User:active {
+        transform: scale(1.05); /* Tıklanıldığında biraz büyütür */
+        box-shadow: none; /* Gölgeyi kaldırır */
+        opacity: 1; /* Öğeyi yarı saydam yapar */
+    }
+
+
+
+.toplanti-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.toplanti-light-sol {
+    background-color: #fff;
+    width: 70%;
+    max-height: 70%;
+    align-items: center;
+}
+
+.toplanti-light-sag {
+    background-color: #fff;
+    width: 28%;
+    max-height: 28%;
+    align-items: center;
+}
+
+.toplanti-sol {
+    width: 100%;
+    height: 84vh;
+}
+
+#calendar {
+    width: 100%;
+    height: 84vh;
+}
+
+.fc-v-event {
+    background-color: grey;
+}

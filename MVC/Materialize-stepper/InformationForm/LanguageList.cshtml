@@ -1,0 +1,38 @@
+﻿@model List<LanguageSelect2>
+<div class="row justify-content-center mb-5 mt-5">
+    <div class="col-8 text-center">
+        <label class="control-label h3">@XmlCarrierLangHtmlExtender.L("Step1")</label>
+    </div>
+</div>
+
+
+<div class="row justify-content-center mb-4">
+    <div class="col-8">
+        <div class="languageSelect2">
+            <select id="languageSelect2" class="languageSelect2">
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-4">
+    <div class="col-8">
+        <div class="flag-container row text-center justify-content-center">
+            @foreach (var item in Model)
+            {
+                <div id="@item.languageCode" class="col-4 col-lg-2 col-md4 flag-group">
+                    <img id="@item.languageCode" class="CarrierLanguageFlagImage2 next-step" src="~/Store/Carrier/CarrierLanguage/@item.FlagImage" alt="@item.FlagImage" onclick="changeLanguageFlag('@item.languageCode')" />
+                    <span class="country-name">@item.languageName</span>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var languageCode = @Html.Raw(Json.Serialize(XmlCarrierLangHtmlExtender.GetLanguageCode()));
+    LanguageSelectFunction("languageSelect2", '/Store/Carrier/CarrierLanguage/', @Html.Raw(Json.Serialize(Model)), "InformationForm/ChangeXmlLangCode", languageCode);
+    changeFlagBackground(languageCode);
+</script>

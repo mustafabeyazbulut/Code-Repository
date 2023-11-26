@@ -1,0 +1,13 @@
+ <input class="col-12 col-md-12 col-lg-10" type="text" id="CarrierSearchText" name="CarrierSearchText" value="" style="font-size: 50px;">
+
+<a id="searchLink2" class="btn btn-sm btn-default custom-btnIcon" href="">
+  <i class="fa fa-search" aria-hidden="true"></i>
+</a>
+
+document.getElementById("CarrierSearchText").addEventListener("input", function () {
+        var uniqueNumber = this.value;
+        var searchLink1 = document.getElementById("searchLink1");
+        searchLink1.href = '@Url.Action("EditForm", "informationform", new { Area = "Carrier", UniqueNumber = "PLACEHOLDER" })'.replace("PLACEHOLDER", uniqueNumber);
+        var searchLink2 = document.getElementById("searchLink2");
+        searchLink2.href = '@Url.Action("EditForm", "informationform", new { Area = "Carrier", UniqueNumber = "PLACEHOLDER" })'.replace("PLACEHOLDER", uniqueNumber);
+}

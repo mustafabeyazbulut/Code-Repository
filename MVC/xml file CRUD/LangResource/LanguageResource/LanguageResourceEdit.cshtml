@@ -1,0 +1,26 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+@model XmlResourceItem
+<div class="portlet">
+    <div class="portlet__body">
+        @using (Html.BeginForm("LanguageResourceEdit", "LanguageResource", FormMethod.Post, new { id = "frmProfile", @class = "form-horizontal" }))
+        {
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @Html.EditorFor(d => d.Name)
+            @Html.EditorFor(d => d.Value)
+            @Html.EditorFor(d => d.LangCode)
+            <hr />
+            <div class="form-group row">
+                <div class="offset-2 col-10">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        @XmlLangHtmlExtender.L("ProfileSave")
+                    </button>
+                    <a asp-action="Profile" class="btn btn-sm btn-default">
+                        @XmlLangHtmlExtender.L("ProfleCancel")
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

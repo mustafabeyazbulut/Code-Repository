@@ -1,0 +1,117 @@
+﻿@model CarrierInformationForm
+@{
+    var mb = "mb-3";
+    var disabledRef = Model.Activity == CarrierActivity.Weighig ? "disabled" : "";
+    var required = "required";
+}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-md-12  portlet">
+        <div class="portlet__body">
+            <div id="divErrorCarrier" class="form-group row @mb">
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.UniqueNumber, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.UniqueNumber, new { @class = "form-control disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.Activity, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.Activity, new { @class = "form-control disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.ReferanceNumber, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.ReferanceNumber, new { @class = "form-control " + disabledRef })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.HawlageCompanyName, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.HawlageCompanyName, new { @class = "form-control " + required })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="@mb">
+                @Html.EditorFor(d => d.LicencePlates, new { editorCol = 8, labelCol = 4 })
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.ContainerNo, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.ContainerNo, new { @class = "form-control " + required })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.DriverName, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.DriverName, new { @class = "form-control " + required })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.DriverSurname, new { @class = "control-label col-4 h5" })
+                <div class="col-8">
+                    <div class="input-group">
+                        @Html.TextBoxFor(d => d.DriverSurname, new { @class = "form-control " + required })
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.Volume1, new { @class = "control-label col-4 h5" })
+                <div class="input-group col-8">
+                    @Html.HiddenFor(d => d.IsVolume1, new { @class = "form-control form-control-sm" })
+                    @Html.TextBoxFor(d => d.Volume1, new { @class="form-control  decimal2"})
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-default" onclick="updateWeighbridgeCif('Volume1');changeIsVolume1('IsVolume1');">
+                            <img src="~/assets/images/scale-unbalanced-solid.svg" alt="Icon Alt Text" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row @mb">
+                @Html.LabelFor(d => d.Volume2, new { @class = "control-label col-4 h5" })
+                <div class="input-group col-8">
+                    @Html.HiddenFor(d => d.IsVolume2, new { @class = "form-control form-control-sm" })
+                    @Html.TextBoxFor(d => d.Volume2, new { @class="form-control decimal2"})
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-default" onclick="updateWeighbridgeCif('Volume2');changeIsVolume1('IsVolume2');">
+                            <img src="~/assets/images/scale-unbalanced-solid.svg" alt="Icon Alt Text" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    SetupDecimal();
+    SetupVolume();
+    var activty = @Html.Raw(Json.Serialize(Model.Activity));
+    var unloading = @Html.Raw(Json.Serialize(CarrierActivity.Unloading));
+    var loading = @Html.Raw(Json.Serialize(CarrierActivity.Loading));
+
+    if (activty === loading) {
+        updateWeighbridgeCif('Volume1')
+    }
+    if (activty === unloading) {
+        updateWeighbridgeCif('Volume1')
+    }
+</script>

@@ -1,0 +1,27 @@
+@{
+    var editorCol = 10;
+    var labelCol = 2;
+    var h200 = false;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["h200"] != null)
+    {
+        var h200D = ViewData["h200"].ToString();
+        bool.TryParse(h200D, out h200);
+    }
+}
+<div class="form-group row" brn-field="@Model">
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        @Html.TextAreaFor(model => model, new { @class = "form-control form-control-sm " + (h200 ? "txtH200" : "") })
+        @Html.ValidationMessageFor(model => model)
+    </div>
+</div>

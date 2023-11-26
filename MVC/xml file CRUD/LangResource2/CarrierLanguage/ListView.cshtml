@@ -1,0 +1,21 @@
+
+@model IEnumerable<dynamic>
+@{
+    var colList = new List<DataColumn> {
+        new LinkColumn{FieldName = "languageName", Caption = XmlLangHtmlExtender.L("CarrierLanguage_languageName") },
+        new LinkColumn{FieldName = "languageCode", Caption = XmlLangHtmlExtender.L("CarrierLanguage_languageCode") },
+        new LinkColumn{FieldName = "FlagImage", Caption = XmlLangHtmlExtender.L("CarrierLanguage_FlagImage")},
+        new LinkColumn{FieldName = "IsDefault", Caption = XmlLangHtmlExtender.L("CarrierLanguage_IsDefault")},
+        new LinkColumn{FieldName = "IsDeleted", Caption = XmlLangHtmlExtender.L("CarrierLanguage_IsDeleted")},
+    };
+}
+@Html.DataGrid4(Model, colList.ToArray(), new DataGridOptions4
+{
+    KeyField = "Id",
+    TextField = "countryName",
+    ButtonShowEnabled = true,
+    ButtonColumnWidth = 45,
+    ButtonEditEnabled = false,
+    SortDefaultDirection = "DESC",
+    SortDefaultFieldName = "Id"
+})

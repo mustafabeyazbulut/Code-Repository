@@ -1,0 +1,59 @@
+@{
+    var editorCol = 10;
+    var labelCol = 2;
+    var noGroup = false;
+    var disabled = false;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["noGroup"] != null)
+    {
+        var noGroupD = ViewData["noGroup"].ToString();
+        bool.TryParse(noGroupD, out noGroup);
+    }
+    if (ViewData["disabled"] != null)
+    {
+        var disabledD = ViewData["disabled"].ToString();
+        bool.TryParse(disabledD, out disabled);
+    }
+}
+
+@if (noGroup)
+{
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        @if (disabled)
+        {
+            @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm", disabled })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm" })
+        }
+        @Html.ValidationMessageFor(model => model)
+    </div>
+}
+else
+{
+    <div class="form-group row" brn-field="@Model">
+        <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+        <div class="col-@editorCol">
+            @if (disabled)
+            {
+                @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm", disabled })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm" })
+            }
+            @Html.ValidationMessageFor(model => model)
+        </div>
+    </div>
+}

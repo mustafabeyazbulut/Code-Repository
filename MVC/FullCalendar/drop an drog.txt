@@ -1,0 +1,131 @@
+@model ToplantiViewModel
+
+<style>
+    .toplantiList-container {
+        margin: 5%;
+        margin-top: 2%;
+    }
+
+    .toplantiList-row {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        height: 30px;
+        display: flex;
+        justify-content: space-between;
+        padding-left: 10px;
+        padding-right: 10px;
+        align-items: center;
+  
+        cursor: move;
+       
+    }
+
+    /* Eklenecek sürükleme stil */
+    .dragged {
+        background-color: yellow;
+        z-index: 2;
+    }
+
+
+</style>
+<h4 style="text-align: center; margin-top:3%;">Toplantılar</h4>
+
+<div class="toplantiList-container">
+    <button type="button" class="btn btn-primary" style="margin-bottom:5px">
+        Yeni
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+    </button>
+
+    <div class="draganddrop">
+        @for (var i = 1; i <= Model.Toplantilar.Count; i++)
+        {
+            var item = Model.Toplantilar[i - 1];
+            <div class="toplantiList-row" data-index="@i" draggable="true">
+                <div>
+                    @i
+                </div>
+                <div>
+                    @item.ToplantiTarihi
+                </div>
+                <div>
+                    @item.ToplantiSuresi
+                </div>
+                <div>
+                    @item.Baslik
+                </div>
+                <div>
+                    @item.ZorunluTarih
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    let draggedItem = null;
+    let dropTarget = null;
+
+    function handleDragStart(e) {
+        draggedItem = this;
+        this.classList.add('dragged');
+        e.dataTransfer.setData('text/plain', '');
+    }
+
+    function handleDragEnd() {
+        draggedItem.classList.remove('dragged');
+        draggedItem = null;
+        dropTarget = null; // Hedef öğe sıfırlanıyor
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        // Sadece bir kez işlem yapılması için dropTarget kontrolü ekleniyor
+        if (dropTarget !== this) {
+            dropTarget = this;
+            this.classList.add('drag-over'); // Hedef öğe üzerine sürüklendiğinde stil ekleniyor
+        }
+    }
+
+    function handleDragLeave() {
+        dropTarget = null;
+        this.classList.remove('drag-over'); // Hedef öğeden ayrıldığında stil kaldırılıyor
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        // Sadece sürüklenen ve hedef öğeler farklıysa işlem yapılıyor
+        if (draggedItem && draggedItem !== this) {
+            const container = this.parentNode;
+            const containerChildren = Array.from(container.children);
+
+            const draggedIndex = containerChildren.indexOf(draggedItem);
+            const dropIndex = containerChildren.indexOf(this);
+
+            containerChildren[draggedIndex] = this;
+            containerChildren[dropIndex] = draggedItem;
+
+            container.innerHTML = '';
+            containerChildren.forEach(function (item) {
+                container.appendChild(item);
+            });
+        }
+    }
+
+    let items = document.querySelectorAll('.draganddrop .toplantiList-row');
+    items.forEach(function (item) {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('dragleave', handleDragLeave);
+        item.addEventListener('drop', handleDrop);
+    });
+
+    document.addEventListener('selectstart', function (event) {
+        if (event.target.classList.contains('toplantiList-row') && event.target.classList.contains('dragged')) {
+            event.preventDefault();
+        }
+    });
+</script>

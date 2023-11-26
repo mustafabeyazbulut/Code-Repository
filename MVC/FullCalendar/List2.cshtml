@@ -1,0 +1,27 @@
+﻿@model ToplantiViewModel
+@{
+    Layout = "_LayoutRibbon";
+}
+<div class="toplanti-container">
+    <div class="toplanti-light-sol">
+        <div class="toplanti-sol" id="tableOne">
+            @await Html.PartialAsync("ToplantiList", @Model)
+        </div>
+    </div>
+    <div class="toplanti-light-sag">
+        <div class="kullanicilarList-container">
+            <div class="kullanicilarList-query">
+                <h3>Kullanıcı Ara</h3>
+            </div>
+            <div class="kullanicilarList-query">
+
+                @Html.TextBoxFor(m => m.KullaniciAra.Arama , new { @class = "form-control", @placeholder = "Kullanıcı Ara" })
+
+                <button id="btnUserAra" name="btnUserAra" type="button" class="btn btn-primary">Sorgula</button>
+
+            </div>
+        </div>
+
+            @await Html.PartialAsync("KullanicilarList", @Model.Kullanicilar)
+    </div>
+</div>

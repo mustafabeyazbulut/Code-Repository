@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item Name="Step1">
+    <Value>Please select a language to continue.</Value>
+  </Item>
+  <Item Name="Step2">
+    <Value>Welcome to Kanola. Please choose the activity you want to do</Value>
+  </Item>
+  <Item Name="Step2_Activity">
+    <Value>activities</Value>
+  </Item>
+  <Item Name="step2_loading">
+    <Value>loading</Value>
+  </Item>
+  <Item Name="step2_unloading">
+    <Value>Unloading</Value>
+  </Item>
+  <Item Name="Step2_weighing">
+    <Value>Weighing</Value>
+  </Item>
+  <Item Name="CarrierInformationForm_Activity">
+    <Value>activities</Value>
+  </Item>
+</Items>

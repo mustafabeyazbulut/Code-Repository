@@ -1,0 +1,87 @@
+@model DateTime?
+@{
+    var editorCol = 10;
+    var labelCol = 2;
+    var noGroup = false;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["noGroup"] != null)
+    {
+        var noGroupD = ViewData["noGroup"].ToString();
+        bool.TryParse(noGroupD, out noGroup);
+    }
+}
+@if (noGroup)
+{
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        <div class="row">
+            <div class="col-7">
+                <div class="input-group date date-picker">
+                    @Html.TextBox("Date", Model.HasValue ? Model.Value.ToString("dd-MM-yyyy") : "", new { @class = "form-control form-control-sm" })
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                @if (Model != null)
+                {
+                    @Html.TextBox("TimeOfDay", Model.Value.ToString("HH:mm"), new { @class = "form-control form-control-sm", @type="time" })
+                }
+                else
+                {
+                    @Html.TextBox("TimeOfDay", "", new { @class = "form-control form-control-sm", @type = "time" })
+                }
+
+            </div>
+            <div class="col-7">
+                @Html.ValidationMessageFor(model => model)
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group row" brn-field="@Model">
+        <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+        <div class="col-@editorCol">
+            <div class="row">
+                <div class="col-7">
+                    <div class="input-group date date-picker">
+                        @Html.TextBox("Date", Model.HasValue ? Model.Value.ToString("dd-MM-yyyy") : "", new { @class = "form-control form-control-sm" })
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    @if (Model != null)
+                    {
+                        @Html.TextBox("TimeOfDay", Model.Value.ToString("HH:mm"), new { @class = "form-control form-control-sm", @type="time" })
+                    }
+                    else
+                    {
+                        @Html.TextBox("TimeOfDay", "", new { @class = "form-control form-control-sm", @type = "time" })
+                    }
+
+                </div>
+                <div class="col-7">
+                    @Html.ValidationMessageFor(model => model)
+                </div>
+            </div>
+        </div>
+    </div>
+}

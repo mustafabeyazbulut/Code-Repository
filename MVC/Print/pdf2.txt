@@ -1,0 +1,200 @@
+  public IActionResult ReceiptPrint(string ticketNo, string viewNames)
+  {
+      var printerName = SettingRepo.ReceiptPrinter;
+      var item = RepoItem.GetByTicketNo(ticketNo);
+
+      CarrierQueuePrintViewModel model = new CarrierQueuePrintViewModel();
+      model.TicketNo = item.TicketNo;
+      var company = _repoCompany.GetItemShow(2, 35).Result;
+      //model.CompanyName = company.Name != null ? company.Name : "";
+      //model.CompanyAddress1 = company.DeliveryAddress1 != null ? company.DeliveryAddress1 : "";
+      model.CompanyAddress2 = (company.DeliveryPostalCode != null ? company.DeliveryPostalCode : " ") + " " + (company.DeliveryCityName != null ? company.DeliveryCityName : " ");
+      model.CompanyName = @XmlCarrierLangHtmlExtender.L("receipt_Company");
+      model.CompanyAddress1 = @XmlCarrierLangHtmlExtender.L("receipt_CompanyAdress1");
+      model.CompanyAddress2 = @XmlCarrierLangHtmlExtender.L("receipt_CompanyAdress2");
+
+      model.Vehicle = item.Track1 != null ? item.Track1 : "";
+      if (viewNames == "ReceiptQueuePreview")
+      {
+          model.Date = item.Volume1Date.ToString("dd/MM/yyyy HH:mm:ss");
+          model.QueueNo = item.Que.ToString();
+      }
+      else if (viewNames == "ReceiptCompletePreview")
+      {
+          model.Date = item.Day + "/" + item.Month + "/" + item.Year;
+          model.HawlageCompanyName = item.HawlageCompanyName != null ? item.HawlageCompanyName : "";
+
+          model.Volume1 = item.Volume1.ToString("N0") + " kg ";
+          model.Volume2 = item.Volume2.ToString("N0") + " kg ";
+          model.Volume1Date = item.Volume1Date.ToString("HH:mm:ss");
+          model.Volume2Date = item.Volume2Date.ToString("HH:mm:ss");
+
+          if (item.Volume1 > item.Volume2)
+          {
+              model.Net = (item.Volume1 - item.Volume2).ToString("N0") + " kg";
+          }
+          else
+          {
+              model.Net = (item.Volume2 - item.Volume1).ToString("N0") + " kg";
+          }
+      }
+
+
+      if (item == null)
+          return NotFound();
+
+      using (var stream = new MemoryStream())
+      {
+          using (var doc = new PdfDocument())
+          {
+              string paperName = " ";
+              if (viewNames == "ReceiptQueuePreview")
+              {
+                  doc.PageSettings.Size = new SizeF(300, 700);
+                  paperName = "queuePaper";
+              }
+              else if (viewNames == "ReceiptCompletePreview")
+              {
+                     doc.PageSettings.Size = new SizeF(290, 300);
+                  paperName = "new_";
+              }
+                  doc.PageSettings.Margins.All = 0;
+              doc.PageSettings.Margins.Top = 0;
+              doc.PageSettings.SetMargins(0);
+              doc.ViewerPreferences.PageScaling = PageScalingMode.None;
+              doc.ViewerPreferences.FitWindow = true;
+              doc.ViewerPreferences.HideMenubar = true;
+
+              var page = doc.Pages.Add();
+             
+              PdfFont fontCompany = new PdfStandardFont(PdfFontFamily.Helvetica, 30); // Font bilgilerini ayarlayın
+              PdfFont fontAdress = new PdfStandardFont(PdfFontFamily.Helvetica, 15); // Font bilgilerini ayarlayın
+              PdfFont fontContent = new PdfStandardFont(PdfFontFamily.Helvetica, 15); // Font bilgilerini ayarlayın
+              PdfFont fontTicket = new PdfStandardFont(PdfFontFamily.Helvetica, 20); // Font bilgilerini ayarlayın
+              PdfFont fontQueue = new PdfStandardFont(PdfFontFamily.Helvetica, 130); // Font bilgilerini ayarlayın
+
+              int printY = 0;
+              int PrintX = 90;
+              page.Graphics.DrawString(model.CompanyName, fontCompany, PdfBrushes.Black, new PointF(CenterHorizontally(page, model.CompanyName, fontCompany), printY));
+              page.Graphics.DrawString(model.CompanyAddress1, fontAdress, PdfBrushes.Black, new PointF(CenterHorizontally(page, model.CompanyAddress1, fontAdress), printY += 28));
+              page.Graphics.DrawString(model.CompanyAddress2, fontAdress, PdfBrushes.Black, new PointF(CenterHorizontally(page, model.CompanyAddress2, fontAdress), printY += 14));
+
+              page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_TicketNo"), fontTicket, PdfBrushes.Black, new PointF(0, printY += 35));
+              page.Graphics.DrawString(": " + model.TicketNo, fontTicket, PdfBrushes.Black, new PointF(PrintX, printY));
+
+              page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Date"), fontContent, PdfBrushes.Black, new PointF(0, printY += 20));
+              page.Graphics.DrawString(": " + model.Date, fontContent, PdfBrushes.Black, new PointF(PrintX, printY));
+
+              page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Vehicle"), fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+              page.Graphics.DrawString(": " + model.Vehicle, fontContent, PdfBrushes.Black, new PointF(PrintX, printY));
+              if (viewNames == "ReceiptQueuePreview")
+              {
+                  
+                  page.Graphics.DrawString(model.QueueNo, fontQueue, PdfBrushes.Black, new PointF(CenterHorizontally(page, model.QueueNo, fontQueue), printY));
+
+                  string[] lines = SplitTextByWidth(@XmlCarrierLangHtmlExtender.L("receipt_Information"), fontContent, page.Size.Width);
+                  printY = 230;
+                  foreach (string line in lines)
+                  {
+                      page.Graphics.DrawString(line, fontContent, PdfBrushes.Black, new PointF(0, printY += 15)); // Metni sayfaya yazdırın
+                  }
+
+                  var langCode = XmlCarrierLangHtmlExtender.GetLanguageCode();
+                  var langHtml = _repoHtml.GetBody(langCode);
+                  string plainText = System.Text.RegularExpressions.Regex.Replace(langHtml, "<.*?>", "");
+
+                  string[] linesf = plainText.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                  List<string> listBody = plainText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                  printY += 15;
+                  foreach (var itemLang in linesf)
+                  {
+                      string[] linesLang = SplitTextByWidth(itemLang, fontContent, page.Size.Width);
+                      foreach (string line in linesLang)
+                      {
+                          page.Graphics.DrawString(line, fontContent, PdfBrushes.Black, new PointF(0, printY += 15)); // Metni sayfaya yazdırın
+                      }
+                  }
+              }
+              else if (viewNames == "ReceiptCompletePreview")
+              {
+
+                  page.Graphics.DrawString("", fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+
+                  page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Hauler"), fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+                  string[] lines = SplitTextByWidth(model.HawlageCompanyName, fontContent, page.Size.Width - PrintX);
+                  printY -= 15;
+                  foreach (string line in lines)
+                  {
+                      page.Graphics.DrawString(": " + line, fontContent, PdfBrushes.Black, new PointF(PrintX, printY += 15)); // Metni sayfaya yazdırın
+                  }
+
+                  page.Graphics.DrawString("", fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+
+
+                  float startX = PrintX + 10; // Başlangıç noktası
+
+
+                  // Volume1 ve Volume2 metinlerinin uzunlukları
+                  SizeF size1 = fontContent.MeasureString(model.Volume1);
+                  SizeF size2 = fontContent.MeasureString(model.Volume2);
+                  SizeF size3 = fontContent.MeasureString(model.Net);
+
+                  float maxLength = Math.Max(size1.Width, Math.Max(size2.Width, size3.Width));
+
+                  page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Volume1"), fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+                  page.Graphics.DrawString(": ", fontContent, PdfBrushes.Black, new PointF(PrintX, printY));
+
+
+                  page.Graphics.DrawString(model.Volume1, fontContent, PdfBrushes.Black, new RectangleF(startX + maxLength - size1.Width, printY, size1.Width, size1.Height));
+                  page.Graphics.DrawString(model.Volume1Date, fontContent, PdfBrushes.Black, new PointF(startX + maxLength + 5, printY));
+
+
+                  page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Volume2"), fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+                  page.Graphics.DrawString(": ", fontContent, PdfBrushes.Black, new PointF(PrintX, printY));
+                  page.Graphics.DrawString(model.Volume2, fontContent, PdfBrushes.Black, new RectangleF(startX + maxLength - size2.Width, printY, size2.Width, size2.Height));
+                  page.Graphics.DrawString(model.Volume2Date, fontContent, PdfBrushes.Black, new PointF(startX + maxLength + 5, printY));
+
+
+                  page.Graphics.DrawString("..................................................... ", fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+
+                  page.Graphics.DrawString(@XmlCarrierLangHtmlExtender.L("receipt_Net"), fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+                  page.Graphics.DrawString(": ", fontContent, PdfBrushes.Black, new PointF(PrintX, printY));
+
+                  page.Graphics.DrawString(model.Net, fontContent, PdfBrushes.Black, new RectangleF(startX + maxLength - size3.Width, printY, size3.Width, size3.Height));
+
+                  page.Graphics.DrawString(". ", fontContent, PdfBrushes.Black, new PointF(0, printY += 15));
+
+              }
+             
+              doc.Save(stream);
+
+              var tempPdfFilePath = Path.Combine(_hostingEnvironment.WebRootPath, Consts.ReceiptPrintFolder + "receipt.pdf");
+              Directory.CreateDirectory(Path.GetDirectoryName(tempPdfFilePath));
+              System.IO.File.WriteAllBytes(tempPdfFilePath, stream.ToArray());
+              var file = new PrintFilePDF(tempPdfFilePath, "receipt.pdf");
+
+              file.PrintRotation = PrintRotation.None;
+              file.AutoCenter = false;
+              file.AutoRotate = false;
+
+              
+              string trayName = " ";
+
+              ClientPrintJob cpj = new ClientPrintJob();
+              cpj.PrintFile = file;
+
+              if (printerName == "null")
+              {
+                  cpj.ClientPrinter = new DefaultPrinter();
+              }
+              else
+              {
+                 
+                      cpj.ClientPrinter = new InstalledPrinter(System.Net.WebUtility.UrlDecode(printerName),true, trayName, System.Net.WebUtility.UrlDecode(paperName));
+              }
+
+              return File(cpj.GetContent(), "application/octet-stream");
+          }
+      }
+  }

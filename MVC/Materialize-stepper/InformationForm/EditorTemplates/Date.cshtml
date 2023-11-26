@@ -1,0 +1,62 @@
+@model DateTime?
+@{
+    var desc = ViewData.ModelMetadata.Description;
+    var editorCol = 10;
+    var labelCol = 2;
+    var noGroup = false;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+    if (ViewData["noGroup"] != null)
+    {
+        var noGroupD = ViewData["noGroup"].ToString();
+        bool.TryParse(noGroupD, out noGroup);
+    }
+}
+@if (noGroup)
+{
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        <div class="input-group date date-picker">
+            @Html.TextBox("", Model.HasValue ? Model.Value.ToString("dd-MM-yyyy") : "", new { @class = "form-control form-control-sm" })
+            <div class="input-group-append">
+                <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+            </div>
+        </div>
+        @if (!desc.IsEmpty())
+        {
+            <span>@desc</span>
+        }
+        @Html.ValidationMessageFor(model => model)
+    </div>
+}
+else
+{
+    <div class="form-group row" brn-field="@Model">
+        <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+        <div class="col-@editorCol">
+            <div class="input-group date date-picker">
+                @Html.TextBox("", Model.HasValue ? Model.Value.ToString("dd-MM-yyyy") : "", new { @class = "form-control form-control-sm" })
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                </div>
+            </div>
+            @if (!desc.IsEmpty())
+            {
+                <span>@desc</span>
+            }
+            @Html.ValidationMessageFor(model => model)
+        </div>
+    </div>
+}

@@ -1,0 +1,34 @@
+﻿<div class="portlet">
+    <div class="portlet__body">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Dil Seçiniz</label>
+                <select class="form-control" id="languageSelect">
+                    <option selected value="tr">Türkçe</option>
+                    <option value="en">İngilizce</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portlet">
+    <div class="portlet__body">
+        <div id="list2Area" class="table-container">
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var dil = $("#languageSelect").val();
+        LoadUrlToDiv('@Url.Action("ListView2", "LanguageResource")' + '?subId=' + dil, 'list2Area');
+
+        $("#languageSelect").change(function () {
+            LoadUrlToDiv('@Url.Action("ListView2", "LanguageResource")' + '?subId=' + $(this).val(), 'list2Area');
+        });
+    });
+    
+</script>
+
+

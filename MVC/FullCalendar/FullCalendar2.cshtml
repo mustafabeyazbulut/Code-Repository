@@ -1,0 +1,257 @@
+﻿@model ToplantiViewModel
+
+<div id='calendar'></div>
+
+<script src="~/content/admin/plugins/fullcalendar/dist/index-global.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var languageSelect = document.getElementById('languageSelect');
+        let draggableEl = document.getElementById('.draggable-User');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            dragScroll: true, // sürükleme kaydırma
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            expandRows: true, // otomatik satır genişletme
+            locale: 'tr', // başlangıç dil ayarı
+            weekends: false, // haftasonu gösterilsin mi
+            initialView: 'timeGridWeek', // Başlangıçta haftalık görünümü göster
+            selectable: true, // tıklanabilirlik
+            slotLabelInterval: '00:30', // saat aralığı
+            slotLabelFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                omitZeroMinute: false,
+                meridiem: 'short'
+            },
+            eventOverlap: false, // etkinliklerin üst üste binmesini engelle
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay' // takvim görünümü
+            },
+            buttonText: {
+                today: 'Bugün',
+                month: 'Ay',
+                week: 'Hafta',
+                day: 'Gün',
+                list: 'Liste'
+            },
+            slotMinTime: "08:00:00", // gün içindeki ilk saat
+            slotMaxTime: "18:00:00", // gün içindeki son saat
+            select: function (info) {
+                //boş bir tarih seçildiğinde çalışır
+                var url = '../Toplanti/Create?startDate=' + info.startStr + '&endDate=' + info.endStr;
+
+                isEventOnDate(info.startStr, info.endStr, function (isEvent) {
+                    if (isEvent) {
+                        alert('Bu tarih aralığında etkinlik bulunuyor. Başka bir tarih aralığı seçin.');
+                        calendar.unselect(); // Tarih seçimini kaldırın
+                        return;
+                    }
+
+                    $(".fancyboxNot").attr("href", url).fancybox({
+                        padding: 0,
+                        width: 1200,
+                        height: 800,
+                        closeClick: false,
+                        modal: true,
+                        autoSize: false,
+                        maxHeight: 800,
+                        afterLoad: function () {
+                            $("iframe").contents().find("#ToplantiTarihi_Date").addClass("disabled");
+                            $("iframe").contents().find("#ToplantiTarihi_TimeOfDay").addClass("disabled");
+                            $("iframe").contents().find("#ToplantiBitis_Date").addClass("disabled");
+                            $("iframe").contents().find("#ToplantiBitis_TimeOfDay").addClass("disabled");
+                        },
+                        afterClose: function () {
+                            $("iframe").contents().find("#ToplantiTarihi_Date").removeClass("disabled");
+                            $("iframe").contents().find("#ToplantiTarihi_TimeOfDay").removeClass("disabled");
+                            $("iframe").contents().find("#ToplantiBitis_Date").removeClass("disabled");
+                            $("iframe").contents().find("#ToplantiBitis_TimeOfDay").removeClass("disabled");
+                            calendar.refetchEvents();
+                        }
+                    }).trigger("click");
+                });
+            },
+            droppable: true, // this allows things to be dropped onto the calendar
+            eventClick: function (info) {
+                // eventlere tıklandığında çalışır
+                var eventId = info.event.id; // Etkinlik kimliğini alın, gerektiğinde kullanabilirsiniz
+                var url = '../Toplanti/Edit/' + eventId;
+                
+                // kapandıktan sonra calendarı gncele
+                $(".fancyboxNot").attr("href", url).fancybox({
+                    padding: 0,
+                    width: 1200,
+                    height: 800,
+                    closeClick: false,
+                    modal: true,
+                    autoSize: false,
+                    maxHeight: 800,
+                    afterLoad: function () {
+                        $("iframe").contents().find("#ToplantiTarihi_Date").addClass("disabled");
+                        $("iframe").contents().find("#ToplantiTarihi_TimeOfDay").addClass("disabled");
+                        $("iframe").contents().find("#ToplantiBitis_Date").addClass("disabled");
+                        $("iframe").contents().find("#ToplantiBitis_TimeOfDay").addClass("disabled");
+                    },
+                    afterClose: function () {
+                        $("iframe").contents().find("#ToplantiTarihi_Date").removeClass("disabled");
+                        $("iframe").contents().find("#ToplantiTarihi_TimeOfDay").removeClass("disabled");
+                        $("iframe").contents().find("#ToplantiBitis_Date").removeClass("disabled");
+                        $("iframe").contents().find("#ToplantiBitis_TimeOfDay").removeClass("disabled");
+                        calendar.refetchEvents();
+                    }
+                }).trigger("click");
+            },
+            eventDrop: function (info) {
+                // eventler taşındığında çalışır
+                console.log('Etkinlik yeniden konumlandırıldı');
+                $.ajax({
+                    url: 'PostToplantiCalendarEventChange',
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        id: info.event.id,
+                        oldStart: info.oldEvent.startStr,
+                        oldEnd: info.oldEvent.endStr,
+                        start: info.event.startStr,
+                        end: info.event.endStr
+                    },
+                    success: function (result) {
+                        console.log(result)
+                    },
+                    error: function (result) {
+                        console.log(result)
+                        info.revert();
+                    }
+                });
+            },
+            eventResize: function (info) {
+                console.log('Etkinlik yeniden boyutlandırıldı:');
+
+                // eventler taşındığında çalışır
+                $.ajax({
+                    url: 'PostToplantiCalendarEventChange',
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        id: info.event.id,
+                        oldStart: info.oldEvent.startStr,
+                        oldEnd: info.oldEvent.endStr,
+                        start: info.event.startStr,
+                        end: info.event.endStr
+                    },
+                    success: function (result) {
+                        console.log(result)
+                    },
+                    error: function (result) {
+                        console.log(result)
+                        info.revert();
+                    }
+                });
+            },
+            eventDidMount: function (arg) {
+                // Etkinliğin DOM öğesine erişin ve ID ekleyin
+                var eventElement = arg.el;
+                eventElement.setAttribute('id', arg.event.id);
+            },
+            events: function (fetchInfo, successCallback, failureCallback) {
+                //form load olduğunda eventleri yükler. Tarihi buradan çeker. Tarih değiştikçe çalışır
+                $.ajax({
+                    url: 'GetToplantiCalendarList',
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        start: fetchInfo.startStr,
+                        end: fetchInfo.endStr
+                    },
+                    success: function (result) {
+                        var events = [];
+                        result.forEach(function (item) {
+                            var eventId = item.id;
+                            var eventItem = {
+                                id: eventId,
+                                title: item.title,
+                                start: item.start,
+                                end: item.end,
+                                color: item.color,
+                            };
+                            events.push(eventItem);
+                        });
+                        successCallback(events);
+                    }
+                });
+
+            },
+            editable: true, // düzenlenebilirlik
+            allDaySlot: false, // all day alanını gösterme
+        });
+
+        // Sürüklenen öğeleri etkin hale getirin
+        var draggableUsers = document.querySelectorAll('.draggable-User');
+        draggableUsers.forEach(function (item) {
+            // Sürüklenen öğeleri etkin hale getirin
+            item.draggable = true;
+            item.addEventListener('dragstart', function (event) {
+                event.dataTransfer.setData('text/plain', item.dataset.itemId);
+
+            });
+        });
+
+        calendarEl.addEventListener('dragover', function (event) {
+            // Sürüklenen öğeyi takvimin üzerine sürükleyin
+            event.preventDefault();
+        });
+
+        calendarEl.addEventListener('drop', function (event) {
+            // Sürüklenen öğeyi bırakınca çalışır
+            event.preventDefault();
+            var userId = event.dataTransfer.getData('text/plain');
+            var eventElement = event.target.closest('.fc-event'); // Etkinlik öğesini içeren konteyneri bulun
+
+            if (eventElement) {
+                var eventId = eventElement.getAttribute('id'); // Etkinlik kimliğini alın
+                console.log('Etkinlik Kimliği: ' + eventId);
+                console.log('Kullanıcı Kimliği: ' + userId);
+                $.ajax({
+                    url: 'PostAddKatilimciUser',
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        eventId: eventId,
+                        UserId: userId
+                    },
+                    success: function (result) {
+                        calendar.refetchEvents();
+                        console.log(result)
+                    },
+                    error: function (result) {
+                        console.log(result)
+                        console.log(result)
+                    }
+                });
+
+            }
+        });
+        calendar.render();
+    });
+
+    function isEventOnDate(startDate, endDate,callback) {
+        // calback fonksiyonu ile true veya false döndürür
+        $.ajax({
+            url: 'isEventOnDate',
+            dataType: 'json',
+            type: 'post',
+            data: {
+                start: startDate,
+                end: endDate
+            },
+            success: function (result) {
+               callback(result);
+            }
+        }); 
+    }
+</script>
+

@@ -1,0 +1,27 @@
+@model double?
+@{
+    var desc = ViewData.ModelMetadata.Description;
+    var editorCol = 10;
+    var labelCol = 2;
+    if (ViewData["editorCol"] != null)
+    {
+        var editorCold = ViewData["editorCol"].ToString();
+        int.TryParse(editorCold, out editorCol);
+    }
+    if (ViewData["labelCol"] != null)
+    {
+        var labelCold = ViewData["labelCol"].ToString();
+        int.TryParse(labelCold, out labelCol);
+    }
+}
+<div class="form-group row" brn-field="@Model">
+    <label class="col-@labelCol col-form-label col-form-label-sm" brn-field="@Model"></label>
+    <div class="col-@editorCol">
+        @Html.TextBoxFor(model => model, new { @class = "form-control form-control-sm" })
+        @if (!desc.IsEmpty())
+        {
+            <span>@desc</span>
+        }
+        @Html.ValidationMessageFor(model => model)
+    </div>
+</div>
