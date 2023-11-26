@@ -1,0 +1,164 @@
+
+	NOLIST
+; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+
+LABEL?L macro Label
+        RST?RP
+    ifdef PM_USED
+        LALL
+Label
+        XALL
+    else
+Label
+    endif
+    endm
+
+AIN?BBB macro Bin, Bout, Bndx
+	MOVE?BA	Bndx
+        addlw   low (Bout)
+        movwf   FSR
+    if ((Bout) > 255)
+        bsf     STATUS, IRP
+    endif
+        MOVE?BB Bin, INDF
+    if ((Bout) > 255)
+        bcf     STATUS, IRP
+    endif
+    endm
+
+AOUT?BBB macro Bin, Bndx, Bout
+        MOVE?BA Bndx
+        addlw   low (Bin)
+        movwf   FSR
+    if ((Bin) > 255)
+        bsf     STATUS, IRP
+    endif
+        MOVE?BB INDF, Bout
+    if ((Bin) > 255)
+        bcf     STATUS, IRP
+    endif
+    endm
+
+AOUT?BWB macro Bin, Wndx, Bout
+        MOVE?WA Wndx
+        addlw   low (Bin)
+        movwf   FSR
+    if ((Bin) > 255)
+        bsf     STATUS, IRP
+    endif
+        MOVE?BB INDF, Bout
+    if ((Bin) > 255)
+        bcf     STATUS, IRP
+    endif
+    endm
+
+ADD?BCW macro Bin, Cin, Wout
+        movlw   low (Cin)
+        CHK?RP  Bin
+        addwf   Bin, W
+        MOVE?AB Wout
+    if (((Cin) >> 8) == 0)
+        clrf    (Wout) + 1
+        rlf     (Wout) + 1, F
+    else
+        movlw   (Cin) >> 8
+        btfsc   STATUS, C
+        addlw   1
+        movwf   (Wout) + 1
+    endif
+    endm
+
+NOT?BB macro Bin, Bout
+    if (Bout == Bin)
+        CHK?RP  Bout
+        comf    Bout, F
+    else
+        CHK?RP  Bin
+        comf    Bin, W
+        MOVE?AB Bout
+    endif
+    endm
+
+CMPGT?BCL macro Bin, Cin, Label
+    if ((Cin) < 0)
+        L?GOTO  Label
+    else
+      if ((Cin) < 0ffh)
+        CLRWDT?
+        MOVE?CA (Cin) + 1
+        CHK?RP  Bin
+        subwf   Bin, W
+        BIT?GOTO 1, STATUS, C, Label
+      endif
+    endif
+    endm
+
+CMPNE?BCL macro Bin, Cin, Label
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        CLRWDT?
+        MOVE?BA Bin
+        sublw   Cin
+        BIT?GOTO 0, STATUS, Z, Label
+    else
+        L?GOTO  Label
+    endif
+    endm
+
+SHIFTL?BCB macro Bin, Cin, Bout
+    if ((Cin) == 1)
+        bcf     STATUS, C
+      if ((Bout) == (Bin))
+        CHK?RP  Bout
+        rlf     Bout, F
+      else
+        CHK?RP  Bin
+        rlf     Bin, W
+        MOVE?AB Bout
+      endif
+    else
+        MOVE?BB Bin, R0
+        movlw   Cin
+        L?CALL  SHIFTL
+        MOVE?AB Bout
+    endif
+    endm
+SHIFTL_USED = 1
+
+GOTO?L macro Label
+        L?GOTO  Label
+    endm
+
+NEXT?BCL macro Bin, Cin, Label
+    if ((Cin) == 1)
+        CHK?RP  Bin
+      if ((PREV_BANK == 0) & (CODE_SIZE <= 2))
+        incfsz  Bin, F
+        goto    Label
+      else
+        incf    Bin, F
+        BIT?GOTO 0, STATUS, Z, Label
+      endif
+    else
+        movlw   Cin
+        CHK?RP  Bin
+        addwf   Bin, F
+      if ((Cin) <= 255)
+        BIT?GOTO 0, STATUS, C, Label
+      endif
+    endif
+    endm
+
+PAUSE?C macro Cin
+    if (((Cin) >> 8) == 0)
+        MOVE?CA Cin
+        L?CALL  PAUSE
+    else
+        MOVE?CB (Cin) >> 8, R1 + 1
+        MOVE?CA low (Cin)
+        L?CALL  PAUSEL
+    endif
+    endm
+PAUSE_USED = 1
+
+
+	LIST

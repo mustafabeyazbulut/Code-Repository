@@ -1,0 +1,82 @@
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLREOERR 1
+
+DEFINE LCD_DREG PORTD  'LCD DATA PORTUNUN BAÐLANDIÐI PÝC PORTU
+DEFINE LCD_DBIT 0      '4 BÝT BUS ÝÇÝN DATA BÝT BAÞLANGI. (0YADA4)
+DEFINE LCD_RSREG PORTE 'BAÐLANDIÐI PÝC PORTU
+DEFINE LCD_RSBIT 0     'RSNÝN BAÐLANTIÐI PÝC PORTE NÝN BÝT NUMARASI
+DEFINE LCD_EREG PORTE  'LCD E NÝN BAÐLANTIÐI PORT
+DEFINE LCD_EBIT 2      'LCD E NÝN BAÐLANDIÐI PÝC PORTE NÝN BÝT NUMARASI
+DEFINE LCD_BITS 8
+
+ADCON1=7               ' ANALOG BAÐLANTIYI DÝJÝTALE ÇEVÝRÝR.
+PAUSE 100
+
+ k var byte  'saat
+ j var byte 'dk
+i var byte 'saniye
+
+
+
+space VAR byte
+
+label:
+for k = 0 to 23   'saat
+    for j=0 to 59      'dakika
+        for i=0 to 59         'saniye
+       
+        HSEROUT ["Space basarak saat'i ayarlayabilirsiniz:",13,10]
+        HSERIN 100,label1,[space]
+         
+        if space=" " then
+            GOto ayarla  
+        elseif space!=" "  then
+               HSEROUT ["Sadece Space'e basabilirsiniz:",13,10]   
+        endIF
+        
+         label1:
+        
+        pause 100
+        lcdout $fe,1
+        LCDOUT $fe,$85,#(k dig 1),#(k dig 0),":",#(j dig 1),#(j dig 0),":",#(i dig 1),#(i dig 0)
+        ' dig 1 10 lar basamaðý , 0 da birler basamaðý anlamýna gelir
+        next i
+    next j
+next k
+goto label
+
+
+
+AYARLA:
+       HSEROUT ["Saati Gir:",13,10]
+       
+       HSERIN [DEC2 k]
+       IF K>23 THEN 
+       HSEROUT ["0-23 Arasý Bir Deðer Giriniz.",13,10] 
+       goto ayarla   
+       endIF
+       
+       ayarla1:
+       
+       HSEROUT ["Dakikayý Gir:",13,10]
+       HSERIN [DEC j]
+       IF j>59 THEN 
+       HSEROUT ["0-60 Arasý Bir Deðer Giriniz.(Dakika)",13,10] 
+       goto ayarla1 
+       ENDIF
+       
+       ayarla2:
+       HSEROUT ["Saniyeyi Gir:",13,10]
+       HSERIN [DEC i]
+       IF i>59 THEN
+       HSEROUT ["0-60 Arasý Bir Deðer Giriniz.(Saniye)",13,10] 
+       goto ayarla2      
+       ENDIF
+
+       LCDOUT $fe,$C4,#(k dig 1),#(k dig 0),":",#(j dig 1),#(j dig 0),":",#(i dig 1),#(i dig 0)
+       goto label1
+GOTO ayarla
+
+

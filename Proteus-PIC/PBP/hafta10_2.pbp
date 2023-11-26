@@ -1,0 +1,55 @@
+'****************************************************************
+'*  Name    : Hafta 9_2                                      
+'*  Author  : Omar Elsorogy                                                                    
+'****************************************************************
+
+TRISB=0
+TRISC=0
+TRISD=0
+TRISE=7
+ADCON1=7
+
+PORTB=0
+PORTC=0
+PORTD=0
+
+
+i VAR BYTE    
+SYMBOL sayi1=PORTE.0
+
+j VAR BYTE    
+SYMBOL sayi2=PORTE.1
+
+toplam var byte
+
+toplamDigla var byte
+SYMBOL top=PORTE.2
+
+LABEL:
+    if sayi1=0 then
+        I=I+1
+    IF I>9 THEN I=0
+        PORTB=I
+        while   sayi1=0
+        wend
+        
+    endif
+
+
+    if sayi2=0 then
+        j=j+1
+    IF j>9 THEN j=0
+        PORTC=j
+        while   sayi2=0
+        wend
+        
+    endif
+    
+    if top=0 then
+        toplam = i + j
+        toplamDigla = toplam + (toplam dig 1) * 6
+        PORTD=toplamDigla 'toplam  
+    endif  
+GOTO LABEL
+
+

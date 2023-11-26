@@ -1,0 +1,72 @@
+TRISB=0 : TRISC=0
+PortB=0 
+j var byte
+k var byte
+x var byte
+i var byte[34]
+
+i[0]=%00000000
+i[1]=%01111110
+i[2]=%00011000
+i[3]=%00011000
+i[4]=%01111110
+
+i[5]=%00000000
+
+i[7]= %01111010 
+i[8]= %01000000 
+i[9]= %01000000 
+i[10]=%01111010 
+
+i[11]=%00000000 
+
+i[12]=%01111110
+i[13]=%01000010
+i[14]=%01000010
+i[15]=%00111100
+
+i[16]=%00000000
+
+i[17]=%01111110
+i[18]=%01000000
+i[19]=%01000000
+i[20]=%01111110
+
+i[21]=%00000000
+
+i[22]=%01111110
+i[23]=%00011000
+i[24]=%00100100
+i[25]=%01000010
+
+i[26]=%00000000
+i[27]=%00000000
+i[28]=%00000000
+i[29]=%00000000
+i[30]=%00000000
+i[31]=%00000000
+i[32]=%00000000
+i[33]=%00000000
+
+
+
+lbl:
+
+
+k=1
+    for j=0 to 7            
+        portb=~k
+        portc=i[j]
+        pause 8
+        if k=128 then goto devam
+        k=k<<1     '00000001  biri sola doðru kaydýrýr.      
+    next j
+    
+devam:    
+    for j=0 to 32 ' burada yukarýdaki dizileri kaydýrma iþlemi yapýlýyor. i 0 dan baþlayýp 32 ye kadar her dizinin deðerini bir önceki diziye aktarýr.
+                  ' Daha sonra en baþtaki diziyi 33 diziye atar. Böylece devir daim olmuþ olur. En baþ ve en sondaki dizide sýfýrlar olduðu için kayýdýrma esnasýnda for döngüsü ilk iþlemi alýnmýyor
+        i[j]=i[j+1]
+    next j
+    i[33]=i[0]
+
+goto lbl

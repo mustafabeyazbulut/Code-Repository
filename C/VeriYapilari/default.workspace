@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="dandik">
+		<Project filename="EgitimGenel/EgitimGenel.cbp" />
+		<Project filename="DegiskenAdresiIslem/DegiskenAdresiIslem.cbp" />
+		<Project filename="DikdortgenPrizmaAlanHacmi/DikdortgenPrizmaAlanHacmi.cbp" />
+		<Project filename="HarfKacinciSirada/HarfKacinciSirada.cbp" />
+		<Project filename="RandomSayiUretmek/RandomSayiUretmek.cbp" />
+		<Project filename="Pointer/Pointer.cbp" />
+		<Project filename="PointerPalendrom/PointerPalendrom.cbp" />
+		<Project filename="PointerDiziEnBuyukKucuk/PointerDiziEnBuyukKucuk.cbp" />
+		<Project filename="KarakterDizisiBoyu/KarakterDizisiBoyu.cbp" />
+		<Project filename="KarakterDizisiYokEtme/KarakterDizisiYokEtme.cbp" />
+		<Project filename="PointerDiziKopyalama/PointerDiziKopyalama.cbp" />
+		<Project filename="PointerKarakterDizisiBirlestirme/PointerKarakterDizisiBirlestirme.cbp" />
+		<Project filename="KarakterDizisiniYerDegistirme/KarakterDizisiniYerDegistirme.cbp" />
+		<Project filename="StructDeneme/StructDeneme.cbp" />
+		<Project filename="StructKoordinatOlusturma/StructKoordinatOlusturma.cbp" />
+		<Project filename="EnumKullanimi/EnumKullanimi.cbp" />
+		<Project filename="UnionKullanimi/UnionKullanimi.cbp" />
+		<Project filename="UnionStructBellekAlani/UnionStructBellekAlani.cbp" />
+		<Project filename="RecursiveFonksiyonOrnek/RecursiveFonksiyonOrnek.cbp" />
+		<Project filename="RecursiveFonksiyonCarpimSemboluKullanmadanCarpmak/RecursiveFonksiyonCarpimSemboluKullanmadanCarpmak.cbp" />
+		<Project filename="MallocCallocFree/MallocCallocFree.cbp" />
+		<Project filename="Realloc/Realloc.cbp" />
+		<Project filename="BagliListedeIslemler/BagliListedeIslemler.cbp" />
+		<Project filename="Linked_list/Linked_list.cbp" />
+		<Project filename="Heapify/Heapify.cbp" />
+		<Project filename="IkiliAgacYapisi/IkiliAgacYapisi.cbp" />
+		<Project filename="DersIkiliAgac/DersIkiliAgac.cbp" />
+		<Project filename="DersHeap/DersHeap.cbp" />
+		<Project filename="DengeliDengesiz/DengeliDengesiz.cbp" />
+		<Project filename="DengeliDengesiz1/DengeliDengesiz1.cbp" />
+		<Project filename="MatrisGeriver/MatrisGeriver.cbp" />
+		<Project filename="DengeliDengesiz2/DengeliDengesiz2.cbp" />
+		<Project filename="DengeliDengesiz3/DengeliDengesiz3.cbp" />
+		<Project filename="DengeliDengesiz4/DengeliDengesiz4.cbp" />
+		<Project filename="ikiHeapli/ikiHeapli.cbp" />
+		<Project filename="ikikiHeapOrnek/ikikiHeapOrnek.cbp" />
+		<Project filename="HashDers/HashDers.cbp" />
+		<Project filename="HashOdev/HashOdev.cbp" />
+		<Project filename="../../../YapısalProgramlama/projeler/Dersornek/Dersornek.cbp" />
+		<Project filename="../../../YapısalProgramlama/projeler/TahminOyunu/TahminOyunu.cbp" />
+		<Project filename="../../../YapısalProgramlama/projeler/Ders/Ders.cbp" />
+		<Project filename="../../../YapısalProgramlama/projeler/MatHespRecrsveFonk/MatHespRecrsveFonk.cbp" />
+		<Project filename="../../../YapısalProgramlama/projeler/Sinav/Sinav.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

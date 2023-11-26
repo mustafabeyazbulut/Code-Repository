@@ -1,0 +1,96 @@
+TRISB=0
+portb=0
+i var byte
+bekle con 50
+'***************amele usülü tek fazlý tam adým saat yönünde döndürme
+'label:
+'      portb.0=1 :portb.1=0:portb.2=0:portb.3=0: pause bekle
+'      portb.0=0 :portb.1=1:portb.2=0:portb.3=0: pause bekle
+'      portb.0=0 :portb.1=0:portb.2=1:portb.3=0: pause bekle
+'      portb.0=0 :portb.1=0:portb.2=0:portb.3=1: pause bekle
+'goto label
+'****************çýrak usülü tek fazlý tam adým saat yönünde çevirme
+'label:
+'     portb=%00000001:pause bekle
+'     portb=%00000010:pause bekle
+'     portb=%00000100:pause bekle
+'     portb=%00001000:pause bekle
+'goto label
+'****************çýrak usülü tek fazlý tam adým saatin tersi yönünde çevirme
+'label:
+'     portb=%00001000:pause bekle
+'     portb=%00000100:pause bekle
+'     portb=%00000010:pause bekle
+'     portb=%00000001:pause bekle
+'goto label
+'***************çýrak usülü çift fazlý tam adým saat yönünde çevirme
+'label:
+'     portb=%00000011:pause bekle
+'     portb=%00000110:pause bekle
+'     portb=%00001100:pause bekle
+'     portb=%00001001:pause bekle
+'goto label
+'***************çýrak usülü yarým adým saat yönünde çevirme
+'label:
+'     portb=%00000001:pause bekle
+'     portb=%00000011:pause bekle
+     
+'     portb=%00000010:pause bekle
+'     portb=%00000110:pause bekle
+     
+'     portb=%00000100:pause bekle
+'     portb=%00001100:pause bekle
+     
+'     portb=%00001000:pause bekle
+'     portb=%00001001:pause bekle
+'goto label
+'**************çýrak usülü saat yönünde ve tersinde 1 tur attýrma
+'label:
+'    for i=1 to 9
+'         portb=%00000011:pause bekle
+'         portb=%00000110:pause bekle
+'         portb=%00001100:pause bekle
+'         portb=%00001001:pause bekle
+'    next i
+'    for i=1 to 9
+'         portb=%00001000:pause bekle
+'         portb=%00000100:pause bekle
+'         portb=%00000010:pause bekle
+'         portb=%00000001:pause bekle
+'    next i
+'goto label
+'*************usta usülü saat yönünde çevirme
+i=1
+label:
+    portb=i
+    i=i<<1
+    if i=16 then i=1
+    pause bekle
+goto label
+'***********mühendis usülü saat yönünde çift fazlý tam adým
+'k var byte
+'j var byte [4]
+''j[0]=3
+''j[1]=6
+''j[2]=12
+''j[3]=9
+
+'j[0]=1
+'j[1]=2
+'j[2]=4
+'j[3]=8
+'label:
+''    for k=0 to 8     '9 defa içerdeki 4 adýmlýk foru çevir. 9*4=36 adým attýr, yani 1 tur.
+''      for i=0 to 3    'bu for da 4 adým atar
+''        portb=j[i]
+''        pause bekle
+''      next i
+''    next k
+'    for k=0 to 35     'for un içinde tek adým atar. bir tur için 36 adým attýrdýk (aslýnda for 37 çevirdi ama motorun ilk baþlangýcýnda bir adým s geçtiði için 0-36 arasý 37 yaptýk. Devam turlarý için 0-35 yapýlmalý.)
+'      if i=4 then i=0 
+'        portb=j[i]
+'        pause bekle
+'      i=i+1
+'    next k
+'end
+

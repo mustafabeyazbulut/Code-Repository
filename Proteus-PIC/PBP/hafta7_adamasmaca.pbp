@@ -1,0 +1,105 @@
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+
+DEFINE LCD_DREG PORTD         'LCD data portunun baðlandýðý pic portu
+DEFINE LCD_DBIT 0             '4-bit bus için data bit (0 yada4) baþlangýç
+DEFINE LCD_RSREG PORTE        'LCD RS in baðlandýgý pic portu
+DEFINE LCD_RSBIT 0            'RS in baðlandýgý pic portE nin bit numarasý
+DEFINE LCD_EREG PORTE         'LCD E nin baðlandýðý pic portu
+DEFINE LCD_EBIT 2             'LCD E nin bsðlandýðý pic portE nin bit numarasý
+DEFINE LCD_BITS 8
+ADCON1=7
+PAUSE 100
+
+
+i VAR Byte [5]
+x VAR BYTE
+j VAR BYTE
+y var byte
+k VAR BYTE [5]
+
+
+LCDOUT  $fe,$40,14,14,4,0,0,0,0,0 'kafasý ve gövdesi
+LCDOUT  $fe,$48,14,14,4,28,0,0,0,0 'kafasý ve sol kol
+LCDOUT  $fe,$50,14,14,4,31,0,0,0,0 'kafasý ve s-sað kol
+LCDOUT  $fe,$58,14,14,4,31,4,8,16,0 'kafa-gövde ve sol bacak
+LCDOUT  $fe,$60,14,14,4,31,4,10,17,0 'kafa-gövde ve sol+sað bacak
+LCDOUT  $fe,$68,0,0,4,31,4,10,17,0 'kafasýz gövde
+LCDOUT  $fe,$70,0,0,0,0,0,28,28,0 'kafasý kopuk kafa
+LCDOUT  $fe,$78,4,8,23,8,4,0,0,0  'ok
+
+'deneme:   'uzuvlarý sýrayla çaðýrma
+
+'for x=0 to 5
+'LCDOUT $fe,1, x
+'PAUSE 1000                 
+'NEXT x
+'lcdout 6
+'end
+
+
+'deneme2: 'kafa ucurma 
+
+'for x=144 to 135 step -1
+'LCDOUT $fe,1
+'lcdout $fe,134,4
+'LCDOUT $fe,x,7
+'PAUSE 500
+'NEXT X
+'LCDOUT $fe,1
+'LCDOUT $fe,134,5,6
+
+'END
+
+
+label:
+HSEROUT ["Birinci oyuncu 5 karakterli kelimesini girsin",13,10]
+pause 300
+FOR x=1 to 5
+HSERIN [j]
+i[x]=J
+'HSEROUT [i[x]]  her girilen deðiþkeni j'ye atar
+HSEROUT["*"]
+next x
+HSEROUT [13,10]
+
+HSEROUT["Kelime girildi.ýkinci oyuncu tahmine baþlasýn.",13,10]
+pause 300
+
+control:
+FOR x=1 to 5
+HSERIN 100, controldevam, [j]
+controldevam:
+IF i[x]==j then
+'lcdout $fe,1
+lcdout $fe,(127+x),j
+else
+y=                ' haftaya buradan devam et
+
+next x
+goto control
+
+'K[x]=J
+'next x
+'HSEROUT [13,10]
+
+
+
+
+
+
+
+'HSEROUT["Tekrar oynamak için space tusuna basiniz."]
+
+
+ 
+
+
+
+
+
+
+ 
+

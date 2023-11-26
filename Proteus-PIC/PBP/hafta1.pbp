@@ -1,0 +1,91 @@
+TRISB=%00000000  '%B7 B6 B5 B4 B3 B2 B1 B0. Giriþler 1, çýkýþlar 0 yapýlacak
+' örneðin binary ifadesi TRISB=%00001000 ise B3 giriþ olarak ayarlandý. 
+'veya bu þekilde de yazýlabilir: hexadecimal ifadesi TRISB=$08 veya decimal ifadesi TRISB=8 
+
+portb=0
+bekle con 100
+
+j var byte
+i var byte [8]
+i[0]=1 '%00000001
+i[1]=2 '%00000010
+i[2]=4
+i[3]=8
+i[4]=16
+i[5]=32
+i[6]=64
+i[7]=128
+
+label3:
+    for j=0 to 7
+     portb=~i[j]
+     pause bekle
+    next j
+    for j=7 to 0 step -1
+     portb=~i[j]
+     pause bekle
+    next j
+goto label3
+'***********************************************
+'i var byte  'bit 2,byte 255,word 65535
+'i=1:portb=~i:pause bekle
+'label3:
+'  if i<128 then 
+'    i=i<<1 
+'    portb=~i :pause bekle
+'  else
+'    i=1:portb=~i:pause bekle
+'  endif
+'goto label3
+'*********************************************
+'j var byte
+'i var byte [8]
+'i[0]=1 '%00000001
+'i[1]=2 '%00000010
+'i[2]=4
+'i[3]=8
+'i[4]=16
+'i[5]=32
+'i[6]=64
+'i[7]=128
+
+'label3:
+'    for j=0 to 7
+'     portb=i[j]
+'     pause bekle
+'    next j
+'    for j=7 to 0 step -1
+'     portb=i[j]
+'     pause bekle
+'    next j
+'goto label3
+''**********************************************
+'portb=1:pause bekle
+'label3:
+'  if portb<128 then 
+'    portb=portb<<1 :pause bekle
+'  else
+'    portb=1:pause bekle
+'  endif
+'goto label3
+
+'*****************************************************
+'portb=1:pause bekle
+'label2:
+'   if portb<128 then 
+'     portb=portb*2:pause bekle
+'   else
+'     portb=1:pause bekle
+'   endif
+'goto label2
+ '*****************************************************
+'label1:
+'     portb=%00000001:pause bekle
+'     portb=%00000010:pause bekle
+'     portb=%00000100:pause bekle
+'     portb=%00001000:pause bekle
+'     portb=%00010000:pause bekle
+'     portb=%00100000:pause bekle
+'     portb=%01000000:pause bekle
+'     portb=%10000000:pause bekle
+'goto label1

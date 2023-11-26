@@ -1,0 +1,21 @@
+'****************************************************************
+'*  Name    : Hafta 9_1                                      
+'*  Author  : Omar Elsorogy                                                                    
+'****************************************************************
+
+
+TRISB=%10000000
+PORTB=0
+i VAR BYTE    
+SYMBOL BUTTONA=PORTB.7
+
+LABEL:
+    if BUTTONA=0 then
+        I=I+1
+        PORTB=I
+        while   BUTTONA=0
+        
+        wend
+        IF I=16 THEN I=0
+    endif
+GOTO LABEL

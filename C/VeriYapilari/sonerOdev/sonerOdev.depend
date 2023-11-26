@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1610645220 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\sonerodev\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

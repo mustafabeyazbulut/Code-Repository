@@ -1,0 +1,85 @@
+TRISB=0:TRISC=0
+PORTB=0
+
+j var byte 
+k var byte
+i var byte[22]
+a var byte
+mode var byte
+
+
+
+
+i[0]=%11111110
+i[1]=%00000001
+i[2]=%00001110
+i[3]=%00010000
+i[4]=%00010000
+i[5]=%00001110
+i[6]=%00000001
+i[7]=%11111110
+
+i[8]= %11111111
+i[9]= %11111111
+i[10]=%11000000
+i[11]=%11000000
+i[12]=%11000000
+i[13]=%11000000
+i[14]=%11111111
+i[15]=%11111111
+
+i[15]=%11111111
+i[16]=%11111111
+i[17]=%11000000
+i[18]=%11000000
+i[19]=%11000000
+i[20]=%11000000
+i[21]=%11111111
+i[22]=%11111111
+
+
+
+
+label:
+
+mode=7
+
+k=1
+for j=0 to 22
+    
+    portb=~k    'deðili 
+    portc=i[j]
+    pause 2
+    k=k<<1
+    
+    if j//mode=0 and j!=0 and j!=8 then 
+    
+            k=1
+           for a=0 to 10000
+                portb=~k
+                portc=0
+                pause 2
+                k=k<<1
+           next a
+        k=1
+        mode=8
+        pause 300
+    endif
+    
+        
+next j    
+
+
+'for a=0 to 100
+'k=1
+'    for j=8 to 15
+'    portb=~k    'deðili 
+'    portc=i[j]
+'    pause 5
+'    k=k<<1
+'    next j    
+'next a
+    
+     
+goto label
+

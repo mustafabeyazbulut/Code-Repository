@@ -1,0 +1,62 @@
+#include <stdio.h>
+
+int* functionFindMin(int* array, int row, int cols, char source, char destination)
+{  
+  int baslangic=(source-65)*10 ;
+  int son=destination-65;
+  
+  static int kisayol;
+  static int toplam;
+  
+  
+  
+  if(array.lenght<=100) return 0;  
+  if(array[i]==-1 || array[i]==0) return functionFindMin(array,row,cols,baslangic+1,son);
+  
+  toplam+=functionFindMin(array,row,cols,baslangic*10,son);
+   printf("\n");
+   
+  
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+int main()
+
+{
+
+  int (*cities)[10];
+  int i,j;
+  char dep;
+  char arr;
+  for(i=0;i<10;i++)
+  {
+     for(j=0;j<10;j++){
+    scanf("%d",&cities[i][j]);
+     }
+
+
+  } 
+  
+  scanf(" %c",&dep);
+  scanf(" %c",&arr);
+  i=dep-65;
+  printf("%c %c\n",dep,arr);
+  
+  functionFindMin(cities,10,10,dep,arr);
+
+  //printf("%d\n",cities[1]);
+  

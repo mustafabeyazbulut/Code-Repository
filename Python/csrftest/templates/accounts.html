@@ -1,0 +1,12 @@
+<h3>{{username}} kullanıcısı olarak oturum açtınız. </h3> <a href="/logout">Çıkış Yap</a>
+
+<br><br>
+<p>Bakiye: {{balance}} TL</p>
+<form action="/accounts" method="POST" autocomplete="off">
+    <p>Para Transferi</p>
+    <input type="number" name="account" placeholder="Hesap No">
+    <input type="number" name="amount" placeholder="Tutar">
+    <input type="hidden" name="token" value="{{csrf_token}}">
+    <input type="submit" value="Gönder">
+</form>
+{{error_msg}}

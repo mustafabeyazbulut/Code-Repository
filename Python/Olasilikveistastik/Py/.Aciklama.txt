@@ -1,0 +1,16 @@
+1.py-	Bir Paranın 10 defa atıldığında yazı ya da tura geldiği durumları listeleyen algoritma
+2.py-	10 defa atılan bir zarın hangi sayılarının geldiğini gösteren algoritma
+3.py-	100 sayılı bir zarın 10 defa atılması sonucu gelen sayıları yazdıran algoritma
+4.py-	10 defa atılan bir paranın yazı ve tura gelme ihtimalini listeye ekleyen ve bu listede yazı ve turanın 
+	kaç defa geldiğini listeleyen algoritma
+5.py-	Fonksiyona gönderilen sayı kadar ,10 defa atılan zarın kaç defa yazı kaç defa tura geldiğini yazdıran
+	fonksiyondur.
+6.py-	100 kişi içinden 1 kişinin korona olduğunu varsayarsak, sorulan 20 kişiden kaç kişinin korona olabileceğini
+	listeleyen algoritma
+7.py-	100 kişi içinden 1 kişinin korona olduğunu varsayarsak, 20 bin kişi içinde kaç korona vakası olduğunu
+	listeleyen algoritma
+8.py-	10 defa atılan 2 zarın sayılarının birbirinden farklı ya da aynı olması durumunu listeleyen algoritma
+9.py-	bir torbada her iki yüzü siyah, ve her iki yüzü beyaz ve bir yüzü siyah bir yüzü beyaz olan üç kart vardır. 
+	bir tanesini bakmadan çekip masanın üzerine koyuyoruz, diğer arka yüzü görmüyoruz, siyah gelme olasılığı nedir?
+10.py-	bir torbada her iki yüzü siyah, ve her iki yüzü beyaz ve bir yüzü siyah bir yüzü beyaz olan üç kart vardır.
+	masaya koyduğumuz ( arkasını görmüyoruz ) siyah ise kartın arkasında beyaz olma ihtimali nedir?

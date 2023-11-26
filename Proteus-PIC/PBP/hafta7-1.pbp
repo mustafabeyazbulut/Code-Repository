@@ -1,0 +1,227 @@
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLREOERR 1
+
+DEFINE LCD_DREG PORTD  'LCD DATA PORTUNUN BAÐLANDIÐI PÝC PORTU
+DEFINE LCD_DBIT 0      '4 BÝT BUS ÝÇÝN DATA BÝT BAÞLANGI. (0YADA4)
+DEFINE LCD_RSREG PORTE 'BAÐLANDIÐI PÝC PORTU
+DEFINE LCD_RSBIT 0     'RSNÝN BAÐLANTIÐI PÝC PORTE NÝN BÝT NUMARASI
+DEFINE LCD_EREG PORTE  'LCD E NÝN BAÐLANTIÐI PORT
+DEFINE LCD_EBIT 2      'LCD E NÝN BAÐLANDIÐI PÝC PORTE NÝN BÝT NUMARASI
+DEFINE LCD_BITS 8
+
+ADCON1=7               ' ANALOG BAÐLANTIYI DÝJÝTALE ÇEVÝRÝR.
+PAUSE 100
+symbol ses=PortB.0
+i var byte
+harfkontrol var byte [5]
+space var byte
+
+harf VAR byte [5]
+bilinenharf VAR byte [5]
+tahmin VAR byte
+bilinen var byte
+yanlishamle var byte
+degisken var byte
+
+'$FE,1 Ekraný siler.
+'$FE,2 Satir basýna dön
+'$FE,$0C Ýmleç(Kursör) görüntüsünü yok eder
+'$FE,$0E Ýmleci alt çizgi biçimine getirir
+'$FE,$0F Ýmleci yanýp/Soner yapar
+'$FE,$10 Ýmleci 1 pozisyon sola getirir
+'$FE,$14 Ýmleci 1 pozisyon saga getirir
+'$FE,$C0 Ýmleci ikinci satirin baþýna getirir
+'$FE,$94 Ýmleci üçüncü satirin baþýna getirir
+'$FE,$D4 Ýmleci dördüncü satirin baþýna getirir
+
+lcdout $fe,$40,14,10,4,31,4,10,17,0 'adam
+lcdout $fe,$48,0,0,4,31,4,10,17,0 'kafasýz adam
+lcdout $fe,$50,0,0,0,0,14,10,14,0 'kafa
+LCDOUT $FE,$58,4,8,23,8,4,0,0,0   ' ok
+
+
+
+label:
+
+
+     bilinen=0
+     yanlishamle=5
+     tahmin=" "
+     for i=0 to 4
+     bilinenharf[i]="*"
+     harf[i]=" "
+     harfkontrol[i]=0
+     next i
+
+    LCDOUT $FE,1
+    LCDOUT 0,"                  ",3
+    LCDOUT $FE,$C0,bilinenharf[0]   
+    LCDOUT $FE,$C1,bilinenharf[1]
+    LCDOUT $FE,$C2,bilinenharf[2]
+    LCDOUT $FE,$C3,bilinenharf[3]
+    LCDOUT $FE,$C4,bilinenharf[4]
+    lcdout $fe,$C5," Kalan Hamle:",#yanlishamle
+    
+
+    
+    
+    HSEROUT [13,10,"1. Oyuncu 5 karakterli kelimesini girsin:",13,10]
+    for i = 0 to 4
+    HSERIN [harf[i]]
+    HSEROUT ["*"]
+    NExt i
+    
+ 
+    HSEROUT [13,10,"harf girildi",13,10]
+    
+    label2:
+    HSEROUT ["2. Oyuncu tahmine baslasin:",13,10]
+    HSERIN  [tahmin]
+    
+    
+        for i=0 to 4
+            if harf[i]=tahmin and harfkontrol[i]=0 then
+                harfkontrol[i]=1
+                bilinenharf[i]=harf[i]
+                sound ses,[100,10,120,10] 
+                'i=4 ' break için koyuldu
+            endif
+        next i
+    
+'    if harf[0]=tahmin && harfkontrol[0]=0 then
+'    harfkontrol[0]=1       'bilinmiþ oldu
+'    bilinenharf[0]=harf[0]
+'    sound ses,[100,10,120,10] 
+'    endif   
+'    if harf[1]=tahmin && harfkontrol[1]=0 then
+'    harfkontrol[1]=1
+'    bilinenharf[1]=harf[1] 
+'    sound ses,[100,10,120,10]
+'    endif 
+'    if harf[2]=tahmin && harfkontrol[2]=0 then
+'    harfkontrol[2]=1
+'    bilinenharf[2]=harf[2] 
+'    sound ses,[100,10,120,10]
+'    endif 
+'    if harf[3]=tahmin && harfkontrol[3]=0 then
+'    harfkontrol[3]=1
+'    bilinenharf[3]=harf[3] 
+'    sound ses,[100,10,120,10]
+'    endif 
+'    if harf[4]=tahmin && harfkontrol[4]=0 then
+'    harfkontrol[4]=1
+'    bilinenharf[4]=harf[4] 
+'    sound ses,[100,10,120,10]
+'    endif 
+    
+    for i=0 to  4
+         if harf[i]!=tahmin then
+               if i=4 and degisken!=1 then 'forun her deðerinde hamleyi 1 azaltmasýn ---- Degisken 0 ise hamle doðru olan yok anlamýna gelir  --- 
+               ' i=4 olduðunda sadece yanlis hamle azalsýn yoksa 1 harf girildiðinde sürekli yanlishamle 1 azaltýlýr. 
+               yanlishamle=yanlishamle-1
+               sound ses,[80,10,40,10]    
+               endif
+               
+               if yanlishamle=4 then
+                LCDOUT $FE,1
+                LCDOUT 0,"               ",3
+                endif
+                if yanlishamle=3 then
+                LCDOUT $FE,1
+                LCDOUT 0,"           ",3
+                endif
+                if yanlishamle=2 then
+                LCDOUT $FE,1
+                LCDOUT 0,"        ",3
+                endif
+                if yanlishamle=1 then
+                LCDOUT $FE,1
+                LCDOUT 0,"    ",3
+                endif
+                if yanlishamle=0 then
+                LCDOUT $FE,1
+                LCDOUT 0,3
+                endif
+         else  ' doðru hamle var ise degisken 1 olur. 
+         degisken=1
+         endif
+    next i
+       degisken=0
+    
+'    if harf[0]!=tahmin and harf[1]!=tahmin and harf[2]!=tahmin and harf[3]!=tahmin and harf[4]!=tahmin   then
+'    yanlishamle=yanlishamle-1
+    
+'     if yanlishamle=4 then
+'     LCDOUT $FE,1
+'     LCDOUT 0,"               ",3
+'     endif
+'     if yanlishamle=3 then
+'     LCDOUT $FE,1
+'      LCDOUT 0,"           ",3
+'     endif
+'     if yanlishamle=2 then
+'     LCDOUT $FE,1
+'      LCDOUT 0,"        ",3
+'     endif
+'     if yanlishamle=1 then
+'     LCDOUT $FE,1
+'       LCDOUT 0,"    ",3
+'     endif
+'     if yanlishamle=0 then
+'       LCDOUT $FE,1
+'       LCDOUT 0,3
+
+'     endif
+     
+'    endif
+    
+    
+    LCDOUT $FE,$C0,bilinenharf[0]   
+    LCDOUT $FE,$C1,bilinenharf[1]
+    LCDOUT $FE,$C2,bilinenharf[2]
+    LCDOUT $FE,$C3,bilinenharf[3]
+    LCDOUT $FE,$C4,bilinenharf[4]
+    lcdout $fe,$C5," Kalan Hamle:",#yanlishamle
+
+    if harfkontrol[0]=1 and harfkontrol[1]=1 and harfkontrol[2]=1 and harfkontrol[3]=1 and harfkontrol[4]=1 then
+       LCDOUT $FE,$C0,"Kazandiniz          " 
+     
+    elseif yanlishamle=0 then
+     ' kaybetme durumu
+    LCDOUT $FE,1
+    LCDOUT 1,2,3,"kaybettiniz"
+    LCDOUT $FE,$C0,bilinenharf[0]   
+    LCDOUT $FE,$C1,bilinenharf[1]
+    LCDOUT $FE,$C2,bilinenharf[2]
+    LCDOUT $FE,$C3,bilinenharf[3]
+    LCDOUT $FE,$C4,bilinenharf[4]
+    lcdout $fe,$C5," Kalan Hamle:",#yanlishamle
+      'LCDOUT $FE,$C0,"adam asildi" 
+      
+    else 'daha hakkýmýz var 
+    
+    goto label2
+    endif
+    
+    
+    
+    label3:
+    HSEROUT ["Space basarak yeni oyuna gecebilirsiniz",13,10]
+    HSERIN  [space]
+    if space!=" " then
+    GOto label3
+    endIF
+
+goto label
+
+
+
+
+
+
+
+
+
+

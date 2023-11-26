@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1610535326 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\hashders\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

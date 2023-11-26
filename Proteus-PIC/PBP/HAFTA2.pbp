@@ -1,0 +1,21 @@
+' while koþul wend
+
+TRISB=%00000011  ' 1giriþ portu 0 çýkýþ portu
+
+TRISC=0
+PORTC=0
+
+SYMBOL kirmizibutton=PORTB.0
+SYMBOL saributton=PORTB.1
+
+SYMBOL sariled=PORTC.0
+SYMBOL kirmiziled=PORTC.1
+
+while kirmizibutton=0 'butona basýldýðýnda öncesinde kirmizi buton pullup olduðundan 1 deðeri döndürüyor basýldýðýnda 0
+kirmiziled=1
+wend
+
+while saributton==1   'butona basýldýðýnda öncesinde kirmizi buton pulldown olduðundan 0 deðeri döndürüyor basýldýðýnda 1
+sariled=1
+wend
+

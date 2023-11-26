@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1607798142 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\dengelidengesiz\main.c
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+

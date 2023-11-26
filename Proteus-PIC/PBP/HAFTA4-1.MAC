@@ -1,0 +1,150 @@
+
+	NOLIST
+; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+
+LABEL?L macro Label
+        RST?RP
+    ifdef PM_USED
+        LALL
+Label
+        XALL
+    else
+Label
+    endif
+    endm
+
+CMPEQ?BCL macro Bin, Cin, Label
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        CLRWDT?
+        MOVE?BA Bin
+        sublw   Cin
+        BIT?GOTO 1, STATUS, Z, Label
+    endif
+    endm
+
+CMPGT?BCL macro Bin, Cin, Label
+    if ((Cin) < 0)
+        L?GOTO  Label
+    else
+      if ((Cin) < 0ffh)
+        CLRWDT?
+        MOVE?CA (Cin) + 1
+        CHK?RP  Bin
+        subwf   Bin, W
+        BIT?GOTO 1, STATUS, C, Label
+      endif
+    endif
+    endm
+
+CMPLE?BCL macro Bin, Cin, Label
+    if ((Cin) >= 0ffh)
+        L?GOTO  Label
+    else
+      if ((Cin) >= 0)
+        CLRWDT?
+        MOVE?CA (Cin) + 1
+        CHK?RP  Bin
+        subwf   Bin, W
+        BIT?GOTO 0, STATUS, C, Label
+      endif
+    endif
+    endm
+
+CMPNE?BCL macro Bin, Cin, Label
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        CLRWDT?
+        MOVE?BA Bin
+        sublw   Cin
+        BIT?GOTO 0, STATUS, Z, Label
+    else
+        L?GOTO  Label
+    endif
+    endm
+
+DIG?BCW macro Bin, Cin, Wout
+        MOVE?BW Bin, R0
+        movlw   Cin
+        L?CALL  DIG
+        MOVE?AW Wout
+    endm
+DIG_USED = 1
+
+GOTO?L macro Label
+        L?GOTO  Label
+    endm
+
+HSERINCOUNT?C macro Cin
+        MOVE?CB Cin, R4 + 1
+    endm
+
+HSERINTIME?C macro Cin
+        MOVE?CW Cin, R6
+    endm
+
+HSERIN?BL macro Bout, Label
+        L?CALL  HSERINTO
+        BIT?GOTO 0, STATUS, C, Label
+        MOVE?AB Bout
+    endm
+HSERINTO_USED = 1
+
+HSERINDEC?B macro Bin
+        MOVE?CW HSERIN, R8
+        L?CALL  SERIN2DEC
+        MOVE?AB Bin
+    endm
+HSERIN_USED = 1
+SERIN2DEC_USED = 1
+
+HSEROUT?C macro Cin
+        movlw   Cin
+        L?CALL  HSEROUT
+    endm
+HSEROUT_USED = 1
+
+LCDOUT?C macro Cin
+        movlw   Cin
+        L?CALL  LCDOUT
+    endm
+LCDOUT_USED = 1
+
+LCDOUTD?W macro Win
+        MOVE?WWA Win, R2
+        L?CALL  LCDOUTDECL
+    endm
+LCDOUTDECL_USED = 1
+
+NEXT?BCL macro Bin, Cin, Label
+    if ((Cin) == 1)
+        CHK?RP  Bin
+      if ((PREV_BANK == 0) & (CODE_SIZE <= 2))
+        incfsz  Bin, F
+        goto    Label
+      else
+        incf    Bin, F
+        BIT?GOTO 0, STATUS, Z, Label
+      endif
+    else
+        movlw   Cin
+        CHK?RP  Bin
+        addwf   Bin, F
+      if ((Cin) <= 255)
+        BIT?GOTO 0, STATUS, C, Label
+      endif
+    endif
+    endm
+
+PAUSE?C macro Cin
+    if (((Cin) >> 8) == 0)
+        MOVE?CA Cin
+        L?CALL  PAUSE
+    else
+        MOVE?CB (Cin) >> 8, R1 + 1
+        MOVE?CA low (Cin)
+        L?CALL  PAUSEL
+    endif
+    endm
+PAUSE_USED = 1
+
+
+	LIST

@@ -1,0 +1,92 @@
+DEFINE LCD_DREG PORTD          
+DEFINE LCD_DBIT 0
+DEFINE LCD_RSREG PORTE
+DEFINE LCD_RSBIT 0
+DEFINE LCD_EREG PORTE
+DEFINE LCD_EBIT 2
+DEFINE LCD_BITS 8
+ADCON1=7
+PAUSE 100
+
+
+TRISB=%11110000
+TRISC=%00000000
+
+
+PORTB=0
+PORTC=0
+
+
+symbol satir1=PortB.0
+symbol satir2=PortB.1
+symbol satir3=PortB.2
+symbol satir4=PortB.3
+symbol sutun1=PortB.4
+symbol sutun2=PortB.5
+symbol sutun3=PortB.6
+symbol sutun4=PortB.7
+
+i var byte
+j var byte
+k var byte
+m var byte
+
+
+i=" ":j=" ":k=" "
+ 
+label1:
+   
+    satir1=1:satir2=0:satir3=0:satir4=0
+        if sutun1=1 then i=7
+        if sutun2=1 then i=8
+        if sutun3=1 then i=9
+        if sutun4=1 and i!=" " then j="/" :k=i:i=" "
+        pause 5
+    satir1=0:satir2=1:satir3=0:satir4=0
+        if sutun1=1 then i=4
+        if sutun2=1 then i=5
+        if sutun3=1 then i=6
+        if sutun4=1 and i!=" "  then j="*" :k=i:i=" "
+        pause 5 
+    satir1=0:satir2=0:satir3=1:satir4=0
+        if sutun1=1 then i=1
+        if sutun2=1 then i=2
+        if sutun3=1 then i=3
+        if sutun4=1 and i!=" "  then j="-" :k=i:i=" "
+        pause 5
+    satir1=0:satir2=0:satir3=0:satir4=1
+        if sutun1=1 then i=0
+        if sutun2=1 then i=0
+        if sutun3=1 and i!=" " then goto label
+        if sutun4=1 and i!=" " then j="+" :k=i :i=" "
+        pause 5
+        portd=i
+    
+    if i!=" " and k=" " and j=" "  then lcdout $fe,1,#i
+    if i=" " and k!=" " and  j!=" " then lcdout $fe,1,#k,j
+    if i!=" " and k!=" " and  j!=" " then lcdout $fe,1,#k,j,#i
+                 
+goto label1
+
+label:   
+    select case j
+    case "/"
+    m=k/i
+    case "*"
+    m=k*i
+    case "+"
+    m=k+i
+    case "-"
+        if k>i then m=k-i
+        if i>=k then m=i-k
+    end select
+    
+    if k<i and j="-" then 
+        lcdout $fe,1,#k,j,#i,"=","-",#m
+    else
+        lcdout $fe,1,#k,j,#i,"=",#m
+    endif
+    pause 100
+
+    if sutun1=1 then k=" ":i=" ":m=" ":j=" ":GOTO LABEL1
+goto label

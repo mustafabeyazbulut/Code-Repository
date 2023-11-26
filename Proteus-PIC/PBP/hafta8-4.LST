@@ -1,0 +1,2746 @@
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002 ; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+  00000001            00003 _USED                   EQU     1
+                      00004 
+                      00005         INCLUDE "C:\PBP\16F877.INC"
+                      00001 ;****************************************************************
+                      00002 ;*  16F877.INC                                                  *
+                      00003 ;*                                                              *
+                      00004 ;*  By        : Leonard Zerman, Jeff Schmoyer                   *
+                      00005 ;*  Notice    : Copyright (c) 2003 microEngineering Labs, Inc.  *
+                      00006 ;*              All Rights Reserved                             *
+                      00007 ;*  Date      : 11/07/03                                        *
+                      00008 ;*  Version   : 2.45                                            *
+                      00009 ;*  Notes     :                                                 *
+                      00010 ;****************************************************************
+                      00019         LIST
+                      00020         LIST p = 16F877, r = dec, w = -302
+                      00021         INCLUDE "P16F877.INC"   ; MPASM  Header
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Sep 19 2017
+                      00005 ;  MPASM PIC16F877 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2017 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00541         LIST
+2007   3F75           00022         __config _XT_OSC & _WDT_ON & _PWRTE_ON & _LVP_OFF & _CP_OFF
+                      00025         LIST
+                      00006 
+                      00007 
+                      00008 ; Define statements.
+                      00009 ; C:\PBP\16F877.BAS             00018   DEFINE  CODE_SIZE 8
+                      00010 #define         CODE_SIZE                8
+                      00011 
+  00000020            00012 RAM_START                       EQU     00020h
+  000001EF            00013 RAM_END                         EQU     001EFh
+  00000004            00014 RAM_BANKS                       EQU     00004h
+  00000020            00015 BANK0_START                     EQU     00020h
+  0000007F            00016 BANK0_END                       EQU     0007Fh
+  000000A0            00017 BANK1_START                     EQU     000A0h
+  000000EF            00018 BANK1_END                       EQU     000EFh
+  00000110            00019 BANK2_START                     EQU     00110h
+  0000016F            00020 BANK2_END                       EQU     0016Fh
+  00000190            00021 BANK3_START                     EQU     00190h
+  000001EF            00022 BANK3_END                       EQU     001EFh
+  00002100            00023 EEPROM_START                    EQU     02100h
+  000021FF            00024 EEPROM_END                      EQU     021FFh
+                      00025 
+                      00026 ; C:\PBP\PBPPIC14.RAM           00012   A00020  R0      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000020            00027 R0                              EQU     RAM_START + 000h
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00028 ; C:\PBP\PBPPIC14.RAM           00013   A00022  R1      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000022            00029 R1                              EQU     RAM_START + 002h
+                      00030 ; C:\PBP\PBPPIC14.RAM           00014   A00024  R2      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000024            00031 R2                              EQU     RAM_START + 004h
+                      00032 ; C:\PBP\PBPPIC14.RAM           00015   A00026  R3      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000026            00033 R3                              EQU     RAM_START + 006h
+                      00034 ; C:\PBP\PBPPIC14.RAM           00016   A00028  R4      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000028            00035 R4                              EQU     RAM_START + 008h
+                      00036 ; C:\PBP\PBPPIC14.RAM           00017   A0002A  R5      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  0000002A            00037 R5                              EQU     RAM_START + 00Ah
+                      00038 ; C:\PBP\PBPPIC14.RAM           00018   A0002C  R6      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  0000002C            00039 R6                              EQU     RAM_START + 00Ch
+                      00040 ; C:\PBP\PBPPIC14.RAM           00019   A0002E  R7      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  0000002E            00041 R7                              EQU     RAM_START + 00Eh
+                      00042 ; C:\PBP\PBPPIC14.RAM           00020   A00030  R8      VAR     WORD BANK0 SYSTEM       ' System Registe
+                            r
+  00000030            00043 R8                              EQU     RAM_START + 010h
+                      00044 ; C:\PBP\PBPPIC14.RAM           00026   A00032  FLAGS   VAR     BYTE BANK0 SYSTEM       ' Static flags
+  00000032            00045 FLAGS                           EQU     RAM_START + 012h
+                      00046 ; C:\PBP\PBPPIC14.RAM           00025   A00033  GOP     VAR     BYTE BANK0 SYSTEM       ' Gen Op Paramet
+                            er
+  00000033            00047 GOP                             EQU     RAM_START + 013h
+                      00048 ; C:\PBP\PBPPIC14.RAM           00022   A00034  RM1     VAR     BYTE BANK0 SYSTEM       ' Pin 1 Mask
+  00000034            00049 RM1                             EQU     RAM_START + 014h
+                      00050 ; C:\PBP\PBPPIC14.RAM           00024   A00035  RM2     VAR     BYTE BANK0 SYSTEM       ' Pin 2 Mask
+  00000035            00051 RM2                             EQU     RAM_START + 015h
+                      00052 ; C:\PBP\PBPPIC14.RAM           00021   A00036  RR1     VAR     BYTE BANK0 SYSTEM       ' Pin 1 Register
+  00000036            00053 RR1                             EQU     RAM_START + 016h
+                      00054 ; C:\PBP\PBPPIC14.RAM           00023   A00037  RR2     VAR     BYTE BANK0 SYSTEM       ' Pin 2 Register
+  00000037            00055 RR2                             EQU     RAM_START + 017h
+                      00056 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00005   A00038  i var byte[8]
+  00000038            00057 _i                              EQU     RAM_START + 018h
+                      00058 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00001   A00040  TRISB=0 : TRISC=0
+  00000040            00059 T1                              EQU     RAM_START + 020h
+                      00060 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00003   A00042  j var byte
+  00000042            00061 _j                              EQU     RAM_START + 022h
+                      00062 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00004   A00043  k var byte
+  00000043            00063 _k                              EQU     RAM_START + 023h
+                      00064 ; C:\PBP\16F877.BAS             00022   PORTL   VAR     PORTB
+  00000006            00065 _PORTL                          EQU      PORTB
+                      00066 ; C:\PBP\16F877.BAS             00023   PORTH   VAR     PORTC
+  00000007            00067 _PORTH                          EQU      PORTC
+                      00068 ; C:\PBP\16F877.BAS             00024   TRISL   VAR     TRISB
+  00000086            00069 _TRISL                          EQU      TRISB
+                      00070 ; C:\PBP\16F877.BAS             00025   TRISH   VAR     TRISC
+  00000087            00071 _TRISH                          EQU      TRISC
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00072         INCLUDE "HAFTA8-4.MAC"
+                      00001 
+                      00111         LIST
+                      00073         INCLUDE "C:\PBP\PBPPIC14.LIB"
+                      00001 ;******************************************************************
+                      00002 ;*  PBPPIC14.LIB                                                  *
+                      00003 ;*                                                                *
+                      00004 ;*  By        : Leonard Zerman, Jeff Schmoyer                     *
+                      00005 ;*  Notice    : Copyright (c) 2009 microEngineering Labs, Inc.    *
+                      00006 ;*              All Rights Reserved                               *
+                      00007 ;*  Date      : 07/08/09                                          *
+                      00008 ;*  Version   : 2.60                                              *
+                      00009 ;*  Notes     :                                                   *
+                      00010 ;******************************************************************
+                      00054   LIST
+                      00055 ; Oscillator is 4MHz
+                      01133   LIST
+0000                  01134     ORG RESET_ORG               ; Reset vector usually at 0
+                      01149   LIST
+0000   2830           01150         goto    INIT            ; Finish initialization
+                      06329   LIST
+0001   01A3           06330 PAUSE   clrf    R1 + 1
+0002   00A2           06331 PAUSEL  movwf   R1
+0003   30FF           06332 pauseloop movlw -1              ; 1 (9)
+0004   07A2           06333         addwf   R1, F           ; 1
+0005   1C03           06334         btfss   STATUS, C       ; 1 / 2
+0006   07A3           06335         addwf   R1 + 1, F       ; 1 / 0
+0007   1C03           06336         btfss   STATUS, C       ; 2
+0008   282B           06337         goto    DONE
+0009   3003           06338         movlw   (PAUSE_DELAY) >> 8      ; 1
+000A   00A1           06339         movwf   R0 + 1          ; 1
+000B   30DF           06340         movlw   low (PAUSE_DELAY)       ; 1
+000C   200F           06341         call    PAUSEUSL        ; -2 (PAUSEUSL gives you 2 less than you ask for)
+000D   2803           06342         goto    pauseloop       ; 2
+                      06386   LIST
+000E   01A1           06387 PAUSEUS clrf    R0 + 1          ; 1
+000F   3EE8           06388 PAUSEUSL addlw  -24             ; 1 Subtract overhead
+0010   00A0           06389         movwf   R0              ; 1
+0011   09A1           06390         comf    R0 + 1, F       ; 1
+0012   30FC           06391         movlw   -4              ; 1
+0013   1C03           06392         btfss   STATUS, C       ; 1 / 2
+0014   2818           06393         goto    pauseush        ; 2 / 0
+0015   07A0           06394 pauseusloop addwf R0, F         ; 1
+0016   1803           06395         btfsc   STATUS, C       ; 1 / 2
+0017   2815           06396         goto    pauseusloop     ; 2 / 0
+0018   07A0           06397 pauseush addwf  R0, F           ; 1 Do an extra countdown
+                      06398         CLRWDT?NOP              ; 1 Keep Watchdog clear
+                          M     ifndef NO_CLRWDT
+0019   0064               M         clrwdt
+                          M     else
+                          M         nop
+                          M     endif
+001A   0FA1           06399         incfsz  R0 + 1, F       ; 1 / 2
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001B   2815           06400         goto    pauseusloop     ; 2 / 0
+001C   1820           06401         btfsc   R0, 0           ; 1 / 2
+001D   281E           06402         goto    $ + 1           ; 2 / 0 Burn an extra cycle
+001E   1CA0           06403         btfss   R0, 1           ; 1 / 2
+001F   2822           06404         goto    pauseusdone     ; 2 / 0
+0020   0000           06405         nop                     ; 1
+0021   2822           06406         goto    $ + 1           ; 2 Burn an extra 2 cycles
+0022   0008           06407 pauseusdone return              ; 2 + 3 (call + setup)
+                      07066   LIST
+0023   1003           07067 shiftlloop bcf  STATUS, C       ; Shift in 0 bits
+0024   0DA0           07068         rlf     R0, F           ; Shift left once
+0025   0DA1           07069         rlf     R0 + 1, F
+0026   3EFF           07070 SHIFTL  addlw   -1
+0027   1803           07071         btfsc   STATUS, C       ; Done?
+0028   2823           07072         goto    shiftlloop
+0029   0820           07073         movf    R0, W           ; Move low part of result to W
+002A   282B           07074         goto    DONE
+                      07766   LIST
+002B   1383           07767 DONE    bcf     STATUS, IRP     ; 1 Set FSR to bank 0/1
+002C   1303           07768         bcf     STATUS, RP1     ; 1 Show direct bank 0
+002D   1283           07769         bcf     STATUS, RP0     ; 1
+                      07770         CLRWDT?NOP              ; 1 Hit Watchdog timer
+                          M     ifndef NO_CLRWDT
+002E   0064               M         clrwdt
+                          M     else
+                          M         nop
+                          M     endif
+002F   0008           07771 DONERET return                  ; 2 Done
+                      07797   LIST
+0030                  07798 INIT
+                      07836   LIST
+0030                  07837 main
+                      00074 
+                      00075 
+                      00076 ; C:\PBP\16F877.BAS             00012   BANK0   $0020, $007F
+                      00077 ; C:\PBP\16F877.BAS             00013   BANK1   $00A0, $00EF
+                      00078 ; C:\PBP\16F877.BAS             00014   BANK2   $0110, $016F
+                      00079 ; C:\PBP\16F877.BAS             00015   BANK3   $0190, $01EF
+                      00080 ; C:\PBP\16F877.BAS             00016   EEPROM  $2100, $21FF
+                      00081 ; C:\PBP\16F877.BAS             00017   LIBRARY "PBPPIC14"
+                      00082 ; C:\PBP\16F877.BAS             00018   DEFINE  CODE_SIZE 8
+                      00083 
+                      00084 ; C:\PBP\16F877.BAS             00020           include "PIC14EXT.BAS"
+                      00085 
+                      00086 ; C:\PBP\16F877.BAS             00027           include "PBPPIC14.RAM"
+                      00087 
+                      00088 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00001   TRISB=0 : TRISC=0
+                      00089         MOVE?CB 000h, TRISB
+                          M         CHK?RP  TRISB
+                          M     if (((TRISB) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((TRISB) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+0030   1683               M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000001                M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((TRISB) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((TRISB) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0031   0186               M         clrf    TRISB
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   TRISB
+                          M     endif
+                      00090 
+                      00091 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00001   TRISB=0 : TRISC=0
+                      00092         MOVE?CB 000h, TRISC
+                          M         CHK?RP  TRISC
+                          M     if (((TRISC) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((TRISC) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000001                M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((TRISC) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((TRISC) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0032   0187               M         clrf    TRISC
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   TRISC
+                          M     endif
+                      00093 
+                      00094 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00002   PortB=0 : PortC=0
+                      00095         MOVE?CB 000h, PORTB
+                          M         CHK?RP  PORTB
+                          M     if (((PORTB) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+0033   1283               M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0034   0186               M         clrf    PORTB
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   PORTB
+                          M     endif
+                      00096 
+                      00097 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00002   PortB=0 : PortC=0
+                      00098         MOVE?CB 000h, PORTC
+                          M         CHK?RP  PORTC
+                          M     if (((PORTC) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0035   0187               M         clrf    PORTC
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   PORTC
+                          M     endif
+                      00099 
+                      00100 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00007   i[0]=%00000000
+                      00101         MOVE?CB 000h, _i
+                          M         CHK?RP  _i
+                          M     if (((_i)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0036   01B8               M         clrf    _i
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   _i
+                          M     endif
+                      00102 
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00103 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00008   i[1]=%00000000
+                      00104         MOVE?CB 000h, _i + 00001h
+                          M         CHK?RP  _i + 00001h
+                          M     if (((_i + 00001h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00001h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00001h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00001h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0037   01B9               M         clrf    _i + 00001h
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   _i + 00001h
+                          M     endif
+                      00105 
+                      00106 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00009   i[2]=%01111110
+                      00107         MOVE?CB 07Eh, _i + 00002h
+                          M         CHK?RP  _i + 00002h
+                          M     if (((_i + 00002h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00002h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00002h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00002h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (07Eh) == 0)
+                          M         clrf    _i + 00002h
+                          M     else
+0038   307E               M         movlw   low (07Eh)
+0039   00BA               M         movwf   _i + 00002h
+                          M     endif
+                      00108 
+                      00109 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00010   i[3]=%00001000
+                      00110         MOVE?CB 008h, _i + 00003h
+                          M         CHK?RP  _i + 00003h
+                          M     if (((_i + 00003h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00003h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     endif
+                          M 
+                          M     if (((_i + 00003h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00003h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (008h) == 0)
+                          M         clrf    _i + 00003h
+                          M     else
+003A   3008               M         movlw   low (008h)
+003B   00BB               M         movwf   _i + 00003h
+                          M     endif
+                      00111 
+                      00112 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00011   i[4]=%00001000
+                      00113         MOVE?CB 008h, _i + 00004h
+                          M         CHK?RP  _i + 00004h
+                          M     if (((_i + 00004h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     if (((_i + 00004h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00004h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00004h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (008h) == 0)
+                          M         clrf    _i + 00004h
+                          M     else
+003C   3008               M         movlw   low (008h)
+003D   00BC               M         movwf   _i + 00004h
+                          M     endif
+                      00114 
+                      00115 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00012   i[5]=%01111110
+                      00116         MOVE?CB 07Eh, _i + 00005h
+                          M         CHK?RP  _i + 00005h
+                          M     if (((_i + 00005h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00005h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00005h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00005h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     if (low (07Eh) == 0)
+                          M         clrf    _i + 00005h
+                          M     else
+003E   307E               M         movlw   low (07Eh)
+003F   00BD               M         movwf   _i + 00005h
+                          M     endif
+                      00117 
+                      00118 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00013   i[6]=%00000000
+                      00119         MOVE?CB 000h, _i + 00006h
+                          M         CHK?RP  _i + 00006h
+                          M     if (((_i + 00006h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00006h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00006h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00006h) & 180h) == 180h)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0040   01BE               M         clrf    _i + 00006h
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   _i + 00006h
+                          M     endif
+                      00120 
+                      00121 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00014   i[7]=%00000000   
+                      00122         MOVE?CB 000h, _i + 00007h
+                          M         CHK?RP  _i + 00007h
+                          M     if (((_i + 00007h) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_i + 00007h) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_i + 00007h) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_i + 00007h) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0041   01BF               M         clrf    _i + 00007h
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   _i + 00007h
+                          M     endif
+                      00123 
+                      00124 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00016   lbl:
+                      00125 
+                      00126         LABEL?L _lbl    
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+                          M     ifdef PM_USED
+                          M         LALL
+                          M _lbl
+                          M         XALL
+                          M     else
+0042                      M _lbl
+                          M     endif
+                      00127 
+                      00128 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00017   k=1
+                      00129         MOVE?CB 001h, _k
+                          M         CHK?RP  _k
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     if (((_k)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (001h) == 0)
+                          M         clrf    _k
+                          M     else
+0042   3001               M         movlw   low (001h)
+0043   00C3               M         movwf   _k
+                          M     endif
+                      00130 
+                      00131 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00018       for j=0 to 7
+                      00132         MOVE?CB 000h, _j
+                          M         CHK?RP  _j
+                          M     if (((_j)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M 
+                          M     if (((_j)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M     if (low (000h) == 0)
+0044   01C2               M         clrf    _j
+                          M     else
+                          M         movlw   low (000h)
+                          M         movwf   _j
+                          M     endif
+                      00133         LABEL?L L00001  
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+                          M     ifdef PM_USED
+                          M         LALL
+                          M L00001
+                          M         XALL
+                          M     else
+0045                      M L00001
+                          M     endif
+                      00134         CMPGT?BCL       _j, 007h, L00002
+                          M     if ((007h) < 0)
+                          M         L?GOTO  L00002
+                          M     else
+                          M       if ((007h) < 0ffh)
+                          M         CLRWDT?
+                          M     ifndef NO_CLRWDT
+0045   0064               M         clrwdt
+                          M     endif
+                          M         MOVE?CA (007h) + 1
+0046   3008               M         movlw   low ((007h) + 1)
+                          M         CHK?RP  _j
+                          M     if (((_j)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+0047   0242               M         subwf   _j,  W
+                          M         BIT?GOTO 1, STATUS, C, L00002
+                          M     ifdef USE_LINKER
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         CLRWDT?
+                          M     else
+                          M       if ($ == (L00002))
+                          M         CLRWDT?
+                          M       endif
+                          M     endif
+                          M 
+                          M     ifdef USE_LINKER
+                          M       if (CODE_SIZE > 2)
+                          M         pagesel L00002
+                          M       endif
+                          M     else
+                          M       if (CODE_SIZE > 2)
+                          M         if (((L00002) & 800h) == 0)
+0048   118A               M         bcf     PCLATH, 3
+                          M         else
+                          M         bsf     PCLATH, 3
+                          M         endif
+                          M       endif
+                          M       if (CODE_SIZE > 4)
+                          M         if (((L00002) & 1000h) == 0)
+0049   120A               M         bcf     PCLATH, 4
+                          M         else
+                          M         bsf     PCLATH, 4
+                          M         endif
+                          M       endif
+                          M     endif
+                          M 
+                          M     if (((STATUS) & 0ff80h) != 0)
+                          M         CHK?RP  STATUS
+                          M         bcf     STATUS, DC
+                          M       if ((1)      == 0)
+                          M         btfss   STATUS, C
+                          M       else
+                          M         btfsc   STATUS, C
+                          M       endif
+                          M         bsf     STATUS, DC
+                          M         RST?RP
+                          M         btfsc   STATUS, DC
+                          M     else
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+                          M       if ((1)      == 0)
+                          M         btfss   STATUS, C
+                          M       else
+004A   1803               M         btfsc   STATUS, C
+                          M       endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     endif
+                          M 
+004B   285D               M         goto    L00002
+                          M       endif
+                          M     endif
+                      00135 
+                      00136 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00019           portb=~k
+                      00137         NOT?BB  _k, PORTB
+                          M     if (PORTB == _k)
+                          M         CHK?RP  PORTB
+                          M         comf    PORTB, F
+                          M     else
+                          M         CHK?RP  _k
+                          M     if (((_k)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+004C   0943               M         comf    _k,  W
+                          M         MOVE?AB PORTB
+                          M         CHK?RP  PORTB
+                          M     if (((PORTB) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((PORTB) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+004D   0086               M         movwf   PORTB
+                          M     endif
+                      00138 
+                      00139 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00020           portc=i[j]
+                      00140         AOUT?BBB        _i, _j, PORTC
+                          M         MOVE?BA _j
+                          M         CHK?RP  _j
+                          M     if (((_j)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+004E   0842               M         movf    _j,  W
+004F   3E38               M         addlw   low (_i)
+0050   0084               M         movwf   FSR
+                          M     if ((_i)  > 255)
+                          M         bsf     STATUS, IRP
+                          M     endif
+                          M         MOVE?BB INDF, PORTC
+                          M         CHK?RP  INDF
+                          M     if (((INDF)  & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((INDF)  & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((INDF)  & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((INDF)  & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+0051   0800               M         movf    INDF, W
+                          M         CHK?RP  PORTC
+                          M     if (((PORTC) & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((PORTC) & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+0052   0087               M         movwf   PORTC
+                          M     if ((_i)  > 255)
+                          M         bcf     STATUS, IRP
+                          M     endif
+                      00141 
+                      00142 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00021           pause 5
+                      00143         PAUSE?C 005h
+                          M     if (((005h) >> 8) == 0)
+                          M         MOVE?CA 005h
+0053   3005               M         movlw   low (005h)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         L?CALL  PAUSE
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+                          M 
+                          M     ifdef USE_LINKER
+                          M       if (CODE_SIZE > 2)
+                          M         pagesel PAUSE
+                          M       endif
+                          M     else
+                          M       if ((PAUSE) < 1)
+                          M         if (CODE_SIZE > 2)
+                          M           if (((PAUSE) & 800h) == 0)
+                          M         bcf     PCLATH, 3
+                          M         else
+                          M         bsf     PCLATH, 3
+                          M         endif
+                          M         endif
+                          M         if (CODE_SIZE > 4)
+                          M           if (((PAUSE) & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M           else
+                          M         bsf     PCLATH, 4
+                          M           endif
+                          M         endif
+                          M       else
+                          M         if ((PAUSE) > $)
+                          M           if (CODE_SIZE > 2)
+                          M             if (((PAUSE) & 800h) == 0)
+                          M         bcf     PCLATH, 3
+                          M             else
+                          M         bsf     PCLATH, 3
+                          M             endif
+                          M           endif
+                          M           if (CODE_SIZE > 4)
+                          M             if (((PAUSE) & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M             else
+                          M         bsf     PCLATH, 4
+                          M             endif
+                          M           endif
+                          M         else
+                          M           if (CODE_SIZE > 2)
+                          M             if (((PAUSE) & 1800h) == 0)
+0054   018A               M         clrf    PCLATH
+                          M             else
+                          M               if (((PAUSE) & 800h) == 0)
+                          M         bcf     PCLATH, 3
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M               else
+                          M         bsf     PCLATH, 3
+                          M               endif
+                          M               if (CODE_SIZE > 4)
+                          M                 if (((PAUSE) & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M                 else
+                          M         bsf     PCLATH, 4
+                          M                 endif   
+                          M               endif
+                          M             endif
+                          M           endif
+                          M         endif
+                          M       endif
+                          M     endif
+                          M 
+0055   2001               M         call    PAUSE
+                          M     else
+                          M         MOVE?CB (005h) >> 8, R1 + 1
+                          M         MOVE?CA low (005h)
+                          M         L?CALL  PAUSEL
+                          M     endif
+                      00144 
+                      00145 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00022           k=k<<1      '' 1 i sola 
+                            kaydýrýr
+                      00146         SHIFTL?BCB      _k, 001h, _k
+                          M     if ((001h) == 1)
+0056   1003               M         bcf     STATUS, C
+                          M       if ((_k)   == (_k))
+                          M         CHK?RP  _k
+                          M     if (((_k)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_k)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+0057   0DC3               M         rlf     _k,   F
+                          M       else
+                          M         CHK?RP  _k
+                          M         rlf     _k,  W
+                          M         MOVE?AB _k
+                          M       endif
+                          M     else
+                          M         MOVE?BB _k,  R0
+                          M         movlw   001h
+                          M         L?CALL  SHIFTL
+                          M         MOVE?AB _k
+                          M     endif
+                      00147 
+                      00148 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00023       next j
+                      00149         NEXT?BCL        _j, 001h, L00001
+                          M     if ((001h) == 1)
+                          M         CHK?RP  _j
+                          M     if (((_j)    & 180h) == 0)
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M       endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       if (PREV_BANK == 2)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+  00000000                M PREV_BANK = 0
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 80h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP1
+                          M       endif
+                          M PREV_BANK = 1
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 100h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bcf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 3)
+                          M         bcf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 2
+                          M     endif
+                          M 
+                          M     if (((_j)    & 180h) == 180h)
+                          M       if (PREV_BANK == 0)
+                          M         bsf     STATUS, RP0
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 1)
+                          M         bsf     STATUS, RP1
+                          M       endif
+                          M       if (PREV_BANK == 2)
+                          M         bsf     STATUS, RP0
+                          M       endif
+                          M PREV_BANK = 3
+                          M     endif
+                          M       if ((PREV_BANK == 0) & (CODE_SIZE <= 2))
+                          M         incfsz  _j,  F
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 35
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M         goto    L00001
+                          M       else
+0058   0AC2               M         incf    _j,  F
+                          M         BIT?GOTO 0, STATUS, Z, L00001
+                          M     ifdef USE_LINKER
+                          M         CLRWDT?
+                          M     else
+                          M       if ($ == (L00001))
+                          M         CLRWDT?
+                          M       endif
+                          M     endif
+                          M 
+                          M     ifdef USE_LINKER
+                          M       if (CODE_SIZE > 2)
+                          M         pagesel L00001
+                          M       endif
+                          M     else
+                          M       if (CODE_SIZE > 2)
+                          M         if (((L00001) & 800h) == 0)
+0059   118A               M         bcf     PCLATH, 3
+                          M         else
+                          M         bsf     PCLATH, 3
+                          M         endif
+                          M       endif
+                          M       if (CODE_SIZE > 4)
+                          M         if (((L00001) & 1000h) == 0)
+005A   120A               M         bcf     PCLATH, 4
+                          M         else
+                          M         bsf     PCLATH, 4
+                          M         endif
+                          M       endif
+                          M     endif
+                          M 
+                          M     if (((STATUS) & 0ff80h) != 0)
+                          M         CHK?RP  STATUS
+                          M         bcf     STATUS, DC
+                          M       if ((0)      == 0)
+                          M         btfss   STATUS, Z
+                          M       else
+                          M         btfsc   STATUS, Z
+                          M       endif
+                          M         bsf     STATUS, DC
+                          M         RST?RP
+                          M         btfsc   STATUS, DC
+                          M     else
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 36
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M       if ((0)      == 0)
+005B   1D03               M         btfss   STATUS, Z
+                          M       else
+                          M         btfsc   STATUS, Z
+                          M       endif
+                          M     endif
+                          M 
+005C   2845               M         goto    L00001
+                          M       endif
+                          M     else
+                          M         movlw   001h
+                          M         CHK?RP  _j
+                          M         addwf   _j,  F
+                          M       if ((001h) <= 255)
+                          M         BIT?GOTO 0, STATUS, C, L00001
+                          M       endif
+                          M     endif
+                      00150         LABEL?L L00002  
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+                          M     ifdef PM_USED
+                          M         LALL
+                          M L00002
+                          M         XALL
+                          M     else
+005D                      M L00002
+                          M     endif
+                      00151 
+                      00152 ; C:\USERS\MUSTAFA\DOCUMENTS\GITHUB\PROTEUS\PBP\HAFTA8-4.PBP    00024   goto lbl
+                      00153         GOTO?L  _lbl
+                          M         L?GOTO  _lbl
+                          M     ifdef USE_LINKER
+                          M         CLRWDT?
+                          M     else
+                          M       if ($ == (_lbl))
+                          M         CLRWDT?
+                          M       endif
+                          M     endif
+                          M 
+                          M         RST?RP
+                          M     if ((PREV_BANK & 1) != 0)
+                          M         bcf     STATUS, RP0
+                          M     endif
+                          M     if ((PREV_BANK & 2) != 0)
+                          M         bcf     STATUS, RP1
+                          M     endif
+  00000000                M PREV_BANK = 0
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 37
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M 
+                          M     ifdef USE_LINKER
+                          M       if (CODE_SIZE > 2)
+                          M         pagesel _lbl
+                          M       endif
+                          M     else
+                          M       if ((_lbl)  < 1)
+                          M         if (CODE_SIZE > 2)
+                          M           if (((_lbl)  & 800h) == 0)
+                          M         bcf     PCLATH, 3
+                          M           else
+                          M         bsf     PCLATH, 3
+                          M           endif
+                          M         endif
+                          M         if (CODE_SIZE > 4)
+                          M           if (((_lbl)  & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M           else
+                          M         bsf     PCLATH, 4
+                          M           endif
+                          M         endif
+                          M       else
+                          M         if ((_lbl)  > $)
+                          M           if (CODE_SIZE > 2)
+                          M             if (((_lbl)  & 800h) == 0)
+                          M         bcf     PCLATH, 3
+                          M             else
+                          M         bsf     PCLATH, 3
+                          M             endif
+                          M           endif
+                          M           if (CODE_SIZE > 4)
+                          M             if (((_lbl)  & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M             else
+                          M         bsf     PCLATH, 4
+                          M             endif
+                          M           endif
+                          M         else
+                          M           if (CODE_SIZE > 2)
+                          M             if (((_lbl)  & 1800h) == 0)
+005D   018A               M         clrf    PCLATH
+                          M             else
+                          M               if (((_lbl)  & 800h) == 0)
+                          M         bcf     PCLATH, 3
+                          M               else
+                          M         bsf     PCLATH, 3
+                          M               endif
+                          M               if (CODE_SIZE > 4)
+                          M                 if (((_lbl)  & 1000h) == 0)
+                          M         bcf     PCLATH, 4
+                          M                 else
+                          M         bsf     PCLATH, 4
+                          M                 endif
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 38
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                          M               endif
+                          M             endif
+                          M           endif
+                          M         endif
+                          M       endif
+                          M     endif
+                          M 
+005E   2842               M         goto    _lbl
+                      00154 
+                      00155         END
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADC_BITS                          00000008
+ADC_CLOCK                         00000003
+ADC_SAMPLEUS                      00000032
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+AOUT?BBB                          
+BANK0_END                         0000007F
+BANK0_START                       00000020
+BANK1_END                         000000EF
+BANK1_START                       000000A0
+BANK2_END                         0000016F
+BANK2_START                       00000110
+BANK3_END                         000001EF
+BANK3_START                       00000190
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BIT?FLIP                          
+BIT?FW                            
+BIT?GOTO                          
+BIT?R1                            
+BIT?R2                            
+BIT?W                             
+BRGH                              00000002
+BUTTON_PAUSE                      0000000A
+C                                 00000000
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP1_BIT                          00000002
+CCP1_REG                          00000007
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCP2_BIT                          00000001
+CCP2_REG                          00000007
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHK?RP                            
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CKE                               00000006
+CKP                               00000004
+CLRWDT?                           
+CLRWDT?NOP                        
+CMPGT?BCL                         
+CODE_SIZE                         8
+CREN                              00000004
+CSRC                              00000007
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DEBUGIN_BIT                       00000000
+DEBUGIN_MODE                      00000001
+DEBUGIN_REG                       00000006
+DEBUG_BAUD                        00000960
+DEBUG_BIT                         00000000
+DEBUG_DELAY                       00000193
+DEBUG_MODE                        00000001
+DEBUG_REG                         00000006
+DONE                              0000002B
+DONERET                           0000002F
+DONE_USED                         00000001
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+EEPROM_END                        000021FF
+EEPROM_START                      00002100
+F                                 00000001
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FERR                              00000002
+FLAGS                             00000032
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GOP                               00000033
+GOTO?L                            
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+HSER_BAUD                         00000960
+HSER_BITS                         00000008
+HSER_RCSTA                        00000090
+HSER_SPBRG                        00000019
+HSER_TXSTA                        00000020
+I2CFIRSTFLAG                      FLAGS, 2
+I2CREADFLAG                       FLAGS, 3
+I2CSTOPFLAG                       FLAGS, 5
+I2CSTOPSTRFLAG                    FLAGS, 6
+I2CWRITEFLAG                      FLAGS, 4
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INIT                              00000030
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+L00001                            00000045
+L00002                            0000005D
+L?CALL                            
+L?GOTO                            
+LABEL?L                           
+LCDCDFLAG                         FLAGS, 0
+LCDINITFLAG                       FLAGS, 1
+LCD_BITS                          00000004
+LCD_COMMANDUS                     000007D0
+LCD_DATAUS                        00000032
+LCD_DBIT                          00000000
+LCD_DREG                          00000005
+LCD_EBIT                          00000003
+LCD_EREG                          00000006
+LCD_LINES                         00000002
+LCD_RSBIT                         00000004
+LCD_RSREG                         00000005
+LCD_RWBIT                         00000004
+LCD_RWREG                         00000005
+MOVE?AB                           
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 42
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+MOVE?AT                           
+MOVE?AW                           
+MOVE?AWW                          
+MOVE?BA                           
+MOVE?BB                           
+MOVE?BT                           
+MOVE?BW                           
+MOVE?CA                           
+MOVE?CB                           
+MOVE?CT                           
+MOVE?CW                           
+MOVE?TA                           
+MOVE?TB                           
+MOVE?TT                           
+MOVE?TW                           
+MOVE?WA                           
+MOVE?WB                           
+MOVE?WT                           
+MOVE?WW                           
+MOVE?WWA                          
+NEXT?BCL                          
+NOT?BB                            
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+OSC                               00000004
+OSC_VALID                         00000001
+P                                 00000004
+PAUSE                             00000001
+PAUSE?C                           
+PAUSEL                            00000002
+PAUSEUS                           0000000E
+PAUSEUSL                          0000000F
+PAUSEUS_USED                      00000001
+PAUSE_DELAY                       000003DF
+PAUSE_USED                        00000001
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 43
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PREV_BANK                         00000000
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+R0                                00000020
+R1                                00000022
+R2                                00000024
+R3                                00000026
+R4                                00000028
+R5                                0000002A
+R6                                0000002C
+R7                                0000002E
+R8                                00000030
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RAM_BANKS                         00000004
+RAM_END                           000001EF
+RAM_START                         00000020
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 44
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RESET_ORG                         00000000
+RM1                               00000034
+RM2                               00000035
+RP0                               00000005
+RP1                               00000006
+RR1                               00000036
+RR2                               00000037
+RSEN                              00000001
+RST?RP                            
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SHIFTL                            00000026
+SHIFTL?BCB                        
+SHIFTL_USED                       00000001
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 45
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1                                00000040
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 46
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 47
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_CPD_ON                           00003EFF
+_CP_ALL                           00000FCF
+_CP_HALF                          00001FDF
+_CP_OFF                           00003FFF
+_CP_UPPER_256                     00002FEF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PORTH                            00000007
+_PORTL                            00000006
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_TRISH                            00000087
+_TRISL                            00000086
+_USED                             00000001
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_ENABLE_OFF                   00003DFF
+_WRT_ENABLE_ON                    00003FFF
+_WRT_OFF                          00003DFF
+_WRT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F877                          00000001
+_i                                00000038
+_j                                00000042
+_k                                00000043
+_lbl                              00000042
+main                              00000030
+pauseloop                         00000003
+pauseusdone                       00000022
+pauseush                          00000018
+pauseusloop                       00000015
+shiftlloop                        00000023
+MPASM 5.76                      HAFTA8-4.ASM   12-28-2021  12:03:13         PAGE 48
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXX- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    95
+Program Memory Words Free:  8097
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     2 suppressed
+
+

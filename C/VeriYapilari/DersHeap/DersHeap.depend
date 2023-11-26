@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1610402999 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\dersheap\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

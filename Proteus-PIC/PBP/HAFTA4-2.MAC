@@ -1,0 +1,82 @@
+
+	NOLIST
+; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+
+LABEL?L macro Label
+        RST?RP
+    ifdef PM_USED
+        LALL
+Label
+        XALL
+    else
+Label
+    endif
+    endm
+
+GOTO?L macro Label
+        L?GOTO  Label
+    endm
+
+HSERINCOUNT?C macro Cin
+        MOVE?CB Cin, R4 + 1
+    endm
+
+HSERINWAIT?CL macro Cin, Label
+        L?CALL  HSERIN
+        sublw   Cin
+        BIT?GOTO 0, STATUS, Z, Label
+    endm
+HSERIN_USED = 1
+
+HSERINSTR?B macro Bin
+        MOVE?CW HSERIN, R8
+      if (RAM_BANKS > 2)
+	MOVE?CB	high (Bin), R2 + 1
+      endif
+        MOVE?CA	low (Bin)
+        L?CALL  SERIN2STR
+    endm
+HSERIN_USED = 1
+SERIN2STR_USED = 1
+
+HSEROUT?C macro Cin
+        movlw   Cin
+        L?CALL  HSEROUT
+    endm
+HSEROUT_USED = 1
+
+HSEROUTCOUNT?C macro Cin
+        MOVE?CB Cin, R4 + 1
+    endm
+
+HSEROUTSTRN?B macro Bin
+        MOVE?CW HSEROUTJ, R8
+      if (RAM_BANKS > 2)
+	MOVE?CB	high (Bin), R2 + 1
+      endif
+        MOVE?CA	low (Bin)
+        L?CALL  SEROUT2STRN
+    endm
+HSEROUTJ_USED = 1
+SEROUT2STRN_USED = 1
+
+LCDOUT?C macro Cin
+        movlw   Cin
+        L?CALL  LCDOUT
+    endm
+LCDOUT_USED = 1
+
+PAUSE?C macro Cin
+    if (((Cin) >> 8) == 0)
+        MOVE?CA Cin
+        L?CALL  PAUSE
+    else
+        MOVE?CB (Cin) >> 8, R1 + 1
+        MOVE?CA low (Cin)
+        L?CALL  PAUSEL
+    endif
+    endm
+PAUSE_USED = 1
+
+
+	LIST

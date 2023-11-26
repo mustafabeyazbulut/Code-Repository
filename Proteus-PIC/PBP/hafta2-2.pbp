@@ -1,0 +1,25 @@
+'BUTONA BASILMADIÐINDA ÝÞLEM SIFIRLANSIN
+TRISB=%10000000 
+'komutu ile 8 bitlik TRISB nin içeriði olur. 
+'En soldaki bitten saða doðru sýrayla RB7, RB6, RB5, RB4, RB3, RB2, RB1, RB0 bacaklarýnýn ne olacaðý buradan belirlenir. 
+'0 olmasý çýkýþ olmasý 1 olmasý giriþ olmasý demektir
+PORTB=0  'Biz buna çýkýþ portunutemizlemediyoruz.Eðerbunu yapmazsak daha önceden aklýnda kalan bilgiye göre ilk çalýþtýrmada LEDlerin bazýlarý yanar bazýlarý söner
+SYMBOL button1=PORTB.7
+
+'SYMBOL ledyellow=PORTC.0
+'SYMBOL ledred=PORTC.1
+'SYMBOL ledgreen=PORTC.2
+'SYMBOL ledblue=PORTC.3
+
+i var byte
+  
+label:
+while button1=1
+i=i+1
+portb=i:PAUSE 100    ': koyarsak yan yana kod yazabiliriz.
+wend
+
+portb=0
+i=0
+goto label
+

@@ -1,0 +1,120 @@
+
+	NOLIST
+; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+
+LABEL?L macro Label
+        RST?RP
+    ifdef PM_USED
+        LALL
+Label
+        XALL
+    else
+Label
+    endif
+    endm
+
+ADD?BBB macro Bin1, Bin2, Bout
+    if ((Bout) == (Bin1))
+        MOVE?BA Bin2
+        CHK?RP  Bin1
+        addwf   Bin1, F
+    else
+      if ((Bout) == (Bin2))
+        MOVE?BA Bin1
+        CHK?RP  Bin2
+        addwf   Bin2, F
+      else
+        MOVE?BA Bin1
+        CHK?RP  Bin2
+        addwf   Bin2, W
+        MOVE?AB Bout
+      endif
+    endif
+    endm
+
+ADD?BCB macro Bin, Cin, Bout
+    if ((Bout) == (Bin))
+      if ((Cin) == 1)
+        CHK?RP  Bout
+        incf    Bout, F
+      else
+        movlw   Cin
+        CHK?RP  Bin
+        addwf   Bin, F
+      endif
+    else
+      if ((Cin) == 1)
+        CHK?RP  Bin
+        incf    Bin, W
+        MOVE?AB Bout
+      else
+        movlw   Cin
+        CHK?RP  Bin
+        addwf   Bin, W
+        MOVE?AB Bout
+      endif
+    endif
+    endm
+
+ADD?BWB macro Bin, Win, Bout
+        MOVE?BA Win
+    if ((Bout) == (Bin))
+        CHK?RP  Bout
+        addwf   Bout, F
+    else
+        CHK?RP  Bin
+        addwf   Bin, W
+        MOVE?AB Bout
+    endif
+    endm
+
+MUL?WCW macro Win, Cin, Wout
+        MOVE?WW Win, R3
+        MOVE?CW Cin, R1
+        L?CALL  MUL
+        MOVE?AWW R2, Wout
+    endm
+MUL_USED = 1
+
+CMPLE?BCL macro Bin, Cin, Label
+    if ((Cin) >= 0ffh)
+        L?GOTO  Label
+    else
+      if ((Cin) >= 0)
+        CLRWDT?
+        MOVE?CA (Cin) + 1
+        CHK?RP  Bin
+        subwf   Bin, W
+        BIT?GOTO 0, STATUS, C, Label
+      endif
+    endif
+    endm
+
+CMPNE?TCL macro Regin, Bitin, Cin, Label
+    if ((Cin) == 0)
+        CLRWDT?
+        BIT?GOTO 1, Regin, Bitin, Label
+    else
+      if ((Cin) == 1)
+        CLRWDT?
+        BIT?GOTO 0, Regin, Bitin, Label
+      else
+        L?GOTO  Label
+      endif
+    endif
+    endm
+
+DIG?BCW macro Bin, Cin, Wout
+        MOVE?BW Bin, R0
+        movlw   Cin
+        L?CALL  DIG
+        MOVE?AW Wout
+    endm
+DIG_USED = 1
+
+GOTO?L macro Label
+        L?GOTO  Label
+    endm
+
+
+	LIST

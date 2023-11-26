@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1606574095 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\egitimgenel\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1606573153 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\egitimgenel\stringdizi.c
+	<stdio.h>
+	<stdlib.h>
+
+1606573367 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\egitimgenel\src\dizi.cpp
+	"dizi.h"
+
+1606573367 c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\egitimgenel\include\dizi.h
+

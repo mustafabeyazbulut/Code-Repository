@@ -1,0 +1,216 @@
+
+	NOLIST
+; PICBASIC PRO(TM) Compiler 2.60, (c) 1998, 2009 microEngineering Labs, Inc. All Rights Reserved. 
+
+LABEL?L macro Label
+        RST?RP
+    ifdef PM_USED
+        LALL
+Label
+        XALL
+    else
+Label
+    endif
+    endm
+
+ADD?BBB macro Bin1, Bin2, Bout
+    if ((Bout) == (Bin1))
+        MOVE?BA Bin2
+        CHK?RP  Bin1
+        addwf   Bin1, F
+    else
+      if ((Bout) == (Bin2))
+        MOVE?BA Bin1
+        CHK?RP  Bin2
+        addwf   Bin2, F
+      else
+        MOVE?BA Bin1
+        CHK?RP  Bin2
+        addwf   Bin2, W
+        MOVE?AB Bout
+      endif
+    endif
+    endm
+
+DIV?BBB macro Bin1, Bin2, Bout
+        MOVE?BW Bin1, R0
+        MOVE?BW Bin2, R1
+        L?CALL  DIV
+        MOVE?AB Bout
+    endm
+DIV_USED = 1
+
+MUL?BBB macro Bin1, Bin2, Bout
+        MOVE?BW Bin1, R3
+        MOVE?BW Bin2, R1
+        L?CALL  MUL
+        MOVE?AB Bout
+    endm
+MUL_USED = 1
+
+SUB?BBB macro Bin1, Bin2, Bout
+    if ((Bout) == (Bin1))
+        MOVE?BA Bin2
+        CHK?RP  Bout
+        subwf   Bout, F
+    else
+        MOVE?BA Bin2
+        CHK?RP  Bin1
+        subwf   Bin1, W
+        MOVE?AB Bout
+    endif
+    endm
+
+LAND?BBW macro Bin1, Bin2, Wout
+        MOVE?BB Bin1, FSR
+        MOVE?BA Bin2
+        L?CALL  LAND
+        MOVE?AB Wout
+        movwf   Wout + 1
+    endm
+LAND_USED = 1
+
+LAND?WBW macro Win, Bin, Wout
+        MOVE?BA Win
+        iorwf   Win + 1, W
+        movwf   FSR
+        MOVE?BA Bin
+        L?CALL  LAND
+        MOVE?AB Wout
+        movwf   Wout + 1
+    endm
+LAND_USED = 1
+
+CMPF?WL macro Win, Label
+        CLRWDT?
+        MOVE?BA Win
+        iorwf   (Win) + 1, W
+        BIT?GOTO 1, STATUS, Z, Label
+    endm
+
+CMPEQ?BCB macro Bin, Cin, Bout
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        MOVE?BA Bin
+        sublw   Cin
+	btfss	STATUS, Z
+        movlw   -1
+	xorlw	0ffh
+        MOVE?AB Bout
+    else
+        CHK?RP  Bout
+        clrf    Bout
+    endif
+    endm
+
+CMPEQ?TCB macro Regin, Bitin, Cin, Bout
+    if (((Cin) == 0) | ((Cin) == 1))
+	clrw
+	CHK?RP	Regin
+      if ((Cin) == 0)
+	btfss Regin, Bitin
+      else
+	btfsc Regin, Bitin
+      endif
+        movlw   -1
+        MOVE?AB Bout
+    else
+        CHK?RP  Bout
+        clrf    Bout
+    endif
+    endm
+
+CMPLE?BBL macro Bin1, Bin2, Label
+        CLRWDT?
+        MOVE?BA Bin1
+        CHK?RP  Bin2
+        subwf   Bin2, W
+        BIT?GOTO 1, STATUS, C, Label
+    endm
+
+CMPLT?BBB macro Bin1, Bin2, Bout
+        MOVE?BB Bin1, R0
+        MOVE?BA Bin2
+        L?CALL  CMPLTB
+        MOVE?AB Bout
+    endm
+CMPLTB_USED = 1
+
+CMPLT?BBL macro Bin1, Bin2, Label
+        CLRWDT?
+        MOVE?BA Bin2
+        CHK?RP  Bin1
+        subwf   Bin1, W
+        BIT?GOTO 0, STATUS, C, Label
+    endm
+
+CMPNE?BCB macro Bin, Cin, Bout
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        MOVE?BA Bin
+        sublw   Cin
+	btfss	STATUS, Z
+    endif
+        movlw   -1
+        MOVE?AB Bout
+    endm
+
+CMPNE?BCL macro Bin, Cin, Label
+    if (((Cin) > -100h) & ((Cin) < 100h))
+        CLRWDT?
+        MOVE?BA Bin
+        sublw   Cin
+        BIT?GOTO 0, STATUS, Z, Label
+    else
+        L?GOTO  Label
+    endif
+    endm
+
+CMPNE?TCL macro Regin, Bitin, Cin, Label
+    if ((Cin) == 0)
+        CLRWDT?
+        BIT?GOTO 1, Regin, Bitin, Label
+    else
+      if ((Cin) == 1)
+        CLRWDT?
+        BIT?GOTO 0, Regin, Bitin, Label
+      else
+        L?GOTO  Label
+      endif
+    endif
+    endm
+
+GOTO?L macro Label
+        L?GOTO  Label
+    endm
+
+LCDOUT?B macro Bin
+        MOVE?BA Bin
+        L?CALL  LCDOUT
+    endm
+LCDOUT_USED = 1
+
+LCDOUT?C macro Cin
+        movlw   Cin
+        L?CALL  LCDOUT
+    endm
+LCDOUT_USED = 1
+
+LCDOUTD?B macro Bin
+        MOVE?BA Bin
+        L?CALL  LCDOUTDEC
+    endm
+LCDOUTDEC_USED = 1
+
+PAUSE?C macro Cin
+    if (((Cin) >> 8) == 0)
+        MOVE?CA Cin
+        L?CALL  PAUSE
+    else
+        MOVE?CB (Cin) >> 8, R1 + 1
+        MOVE?CA low (Cin)
+        L?CALL  PAUSEL
+    endif
+    endm
+PAUSE_USED = 1
+
+
+	LIST

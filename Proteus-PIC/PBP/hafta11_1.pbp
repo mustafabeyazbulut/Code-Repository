@@ -1,0 +1,102 @@
+TRISB=%11110000
+TRISC=%00000000
+TRISD=%00000000
+
+PORTB=0
+PORTC=0
+PORTD=0
+'ADCON1=7
+
+SYMBOL kirmizi=portc.0
+symbol yesil=portc.1
+symbol mavi=portc.2
+
+
+symbol satir1=PortB.0
+symbol satir2=PortB.1
+symbol satir3=PortB.2
+symbol satir4=PortB.3
+symbol sutun1=PortB.4
+symbol sutun2=PortB.5
+symbol sutun3=PortB.6
+symbol sutun4=PortB.7
+
+i var byte
+j var byte
+k var byte
+m var byte
+z var byte 
+t var byte
+toplam var byte
+goster var byte
+
+
+mavi=1:yesil=1:kirmizi=1  
+label1:
+   
+    satir1=1:satir2=0:satir3=0:satir4=0
+        if sutun1=1 then i=7:z=1
+        if sutun2=1 then i=8:z=1
+        if sutun3=1 then i=9:z=1
+        if sutun4=1 then j="/" :k=i:t=1 :z=0 ' t ikinci sayý için z birinci sayý için
+        pause 5
+    satir1=0:satir2=1:satir3=0:satir4=0
+        if sutun1=1 then i=4:z=1
+        if sutun2=1 then i=5:z=1
+        if sutun3=1 then i=6:z=1
+        if sutun4=1 then j="*" :k=i:t=1  :z=0
+        pause 5 
+    satir1=0:satir2=0:satir3=1:satir4=0
+        if sutun1=1 then i=1:z=1
+        if sutun2=1 then i=2:z=1
+        if sutun3=1 then i=3:z=1
+        if sutun4=1 then j="-" :k=i:t=1  :z=0
+        pause 5
+    satir1=0:satir2=0:satir3=0:satir4=1
+        if sutun1=1 then i=0
+        if sutun2=1 then i=0:z=1
+        if sutun3=1 then 
+        yesil=0:mavi=0:kirmizi=1
+        goto label ' hesaplamak için = için aþaðýda iþlem yapacaðýz
+        endif
+        if sutun4=1 then j="+" :k=i:t=1  :z=0
+        pause 5
+        portd=i
+        
+    if z=1 and t!=1 then yesil=0:kirmizi=0:mavi=1
+    if z=0 and t=1 then ' + iþlemine basýldýðýnda
+    if z=1 and t=1  then mavi=0:yesil=1 :kirmizi=0
+       
+goto label1
+
+label:   
+    select case j
+    case "/"
+    m=k/i
+    case "*"
+    m=k*i
+    case "+"
+    m=k+i
+    case "-"
+        if k>i then m=k-i
+        if i>=k then m=i-k
+    end select
+
+     if m<10 then
+        portd=m
+        pause 500
+     else
+         goster=m + (m dig 1) *6
+         portd=goster
+         pause 500
+     endif
+     
+     pause 1000
+     if m // 2=1 then
+             portc=3
+     else
+           portc=5
+
+     endif
+     if sutun1=1 then k=0:i=0:m=0:toplam=0:goster=0:portc=7:z=0:t=0:GOTO LABEL1
+goto label

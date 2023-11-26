@@ -1,0 +1,41 @@
+TRISB=0
+TRISC=3 'TRISC=%00000011
+portb=0
+i var byte
+k var byte
+j var byte [4]
+j[0]=3
+j[1]=6
+j[2]=12
+j[3]=9
+bekle con 50
+symbol ileri=PortC.0
+symbol geri=portC.1
+
+label:
+'if ileri=1 then
+'      if i=4 then i=0 
+'        portb=j[i]
+'        pause bekle
+'      i=i+1
+'endif
+'if geri=1 then
+'    if i=255 then i=4
+'    portb=j[i]
+'    pause bekle
+'    i=i-1
+'endif
+while ileri=1
+      if i=4 then i=0 
+        portb=j[i]
+        pause bekle
+      i=i+1
+wend
+while geri=1 
+    if i=255 then i=4
+    portb=j[i]
+    pause bekle
+    i=i-1
+wend
+goto label
+

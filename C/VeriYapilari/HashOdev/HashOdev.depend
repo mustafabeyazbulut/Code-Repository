@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1611671328 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\hashodev\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1612393294 source:c:\users\mustafa\desktop\dersler\geçilen\veri yapýlarý\c projeleri\hashodev\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1610631448 source:c:\users\mustafa\desktop\dersler\veri yapýlarý\c projeleri\aminasoru2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

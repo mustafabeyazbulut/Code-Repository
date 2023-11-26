@@ -1,0 +1,17 @@
+TRISB=%00000000 
+'B7......B0
+'TRISB=%00001010 VEYA TRISB=$0A VEYA TRISB=10
+PortB=0     'b PORTUNUN TÜM PÝNLERÝ BAÞLANGIÇTA SIFIRLANIR
+
+
+bekle CON 500
+i VAR BYTE   'bit=2, byte=255, word= 65535
+
+label: 
+FOR i=0 TO 15 
+    PortB=i
+    PAUSE bekle
+NEXT i
+
+goto label 
+    
